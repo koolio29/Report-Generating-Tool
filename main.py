@@ -222,6 +222,94 @@ class OverallMcqStats:
     def overall_standard_deviation(self):
         return round(stat.stdev(self.all_mcq_marks), 1)
 
+    def get_individual_mcq_avgs(self):
+        cursor = self._db.get_connection().cursor()
+
+        results = cursor.execute("""
+		SELECT id, AVG(marks) 
+		FROM Results
+		WHERE type="auto"
+		GROUP BY id
+		ORDER BY id ASC 
+		""").fetchall()
+
+        individual_avgs = {}
+
+        for result in results:
+            individual_avgs[str(result[0])] = result[1]
+
+        return individual_avgs
+
+class OverallEssayStats:
+
+    def __init__(self, database_obj):
+        self._db = database_obj
+        self._all_essay_marks = self.__get_all_student_essay_marks()
+
+    def __get_all_student_essay_marks(self):
+        cursor = self._db.get_connection().cursor()
+
+        marks_list = []
+
+        results = cursor.execute("""
+		SELECT (SUM(marks) / (
+				(SELECT SUM(max_marks) FROM Results WHERE type="manual") / 
+				(SELECT COUNT(DISTINCT username) FROM Results WHERE type="manual"))) * 100 AS X
+		FROM Results
+		WHERE type="manual"
+		GROUP BY username
+		ORDER BY X ASC
+		""").fetchall()
+
+        for result in results:
+            marks_list.append(result[0])
+
+        return marks_list
+
+
+    @property
+    def all_essay_marks(self):
+        return self._all_essay_marks
+
+    @property
+    def overall_mean(self):
+        return round(stat.mean(self.all_essay_marks), 1)
+
+    @property
+    def overall_median(self):
+        return round(stat.median(self.all_essay_marks), 1)
+
+    @property
+    def overall_maximum(self):
+        return round(max(self.all_essay_marks), 1)
+
+    @property
+    def overall_minimum(self):
+        return round(min(self.all_essay_marks), 1)
+
+    @property
+    def overall_standard_deviation(self):
+        return round(stat.stdev(self.all_essay_marks), 1)
+
+    def get_individual_essay_avgs(self):
+        cursor = self._db.get_connection().cursor()
+
+        results = cursor.execute("""
+		SELECT id, AVG(marks) 
+		FROM Results
+		WHERE type="manual"
+		GROUP BY id
+		ORDER BY id ASC 
+		""").fetchall()
+
+        individual_avgs = {}
+
+        for result in results:
+            individual_avgs[str(result[0])] = result[1]
+
+        return individual_avgs
+
+
 def main():
     extractor = ExamCsvExtractor()
     exam_results = extractor.get_exam_results(csv_path="data/Test_1.csv")
@@ -229,6 +317,7 @@ def main():
     db = DatabaseAccess(exam_results)
     overallstats = OverallExamStats(db)
     overallmcqstats = OverallMcqStats(db)
+    overallessaystats = OverallEssayStats(db)
 
     print("Overall Exam Stats")
     print("All results (out of 100): ", overallstats.total_marks)
@@ -246,7 +335,18 @@ def main():
     print("maximum (out of 100): ", overallmcqstats.overall_maximum)
     print("minimum (out of 100): ", overallmcqstats.overall_minimum)
     print("standard deviation (out of 100): ", overallmcqstats.overall_standard_deviation)
-    # print("marks distribution (out of 100): ", overallmcqstats.get_marks_distribution())
+    print("MCQ averages (out of 1): ", overallmcqstats.get_individual_mcq_avgs(), end="\n\n")
+
+    print("Overall ESSAY stats (only)")
+    print("All results (out of 100): ", overallessaystats.all_essay_marks)
+    print("mean (out of 100): ", overallessaystats.overall_mean)
+    print("median (out of 100): ", overallessaystats.overall_median)
+    print("maximum (out of 100): ", overallessaystats.overall_maximum)
+    print("minimum (out of 100): ", overallessaystats.overall_minimum)
+    print("standard deviation (out of 100): ", overallessaystats.overall_standard_deviation)
+    print("ESSAY averages (out of 5): ", overallessaystats.get_individual_essay_avgs())
+
+
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,6 @@
 import csv
 import sqlite3
+import statistics as stat
 
 class ExamResults:
 	
@@ -125,6 +126,26 @@ class OverallExamStats:
     def total_marks(self):
         return self._total_marks
 
+    @property
+    def mean(self):
+        return round(stat.mean(self.total_marks), 1)
+
+    @property
+    def median(self):
+        return round(stat.median(self.total_marks), 1)
+
+    @property
+    def maximum(self):
+        return round(max(self.total_marks), 1)
+
+    @property
+    def minimum(self):
+        return round(min(self.total_marks), 1)
+
+    @property
+    def standard_deviation(self):
+        return round(min(self.total_marks), 1)
+
 def main():
     extractor = ExamCsvExtractor()
     exam_results = extractor.get_exam_results(csv_path="data/Test_1.csv")
@@ -133,6 +154,11 @@ def main():
     overallstats = OverallExamStats(db)
 
     print("All results (out of 100): ", overallstats.total_marks)
+    print("mean (out of 100): ", overallstats.mean)
+    print("median (out of 100): ", overallstats.median)
+    print("maximum (out of 100): ", overallstats.maximum)
+    print("minimum (out of 100): ", overallstats.minimum)
+    print("standard deviation (out of 100): ", overallstats.standard_deviation)
 
 if __name__ == "__main__":
     main()

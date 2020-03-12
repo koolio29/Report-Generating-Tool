@@ -172,20 +172,81 @@ class OverallExamStats:
 
         return marks_distributions
 
+class OverallMcqStats:
+
+    def __init__(self, database_obj):
+        self._db = database_obj
+        self._all_mcq_marks = self.__get_all_student_mcq_marks()
+
+    def __get_all_student_mcq_marks(self):
+        cursor = self._db.get_connection().cursor()
+
+        marks_list = []
+
+        results = cursor.execute("""
+		SELECT (SUM(marks) / (
+				(SELECT SUM(max_marks) FROM Results WHERE type="auto") / 
+				(SELECT COUNT(DISTINCT username) FROM Results WHERE type="auto"))) * 100 AS X
+		FROM Results
+		WHERE type="auto"
+		GROUP BY username
+		ORDER BY X ASC
+		""").fetchall()
+
+        for result in results:
+            marks_list.append(result[0])
+
+        return marks_list
+
+    @property
+    def all_mcq_marks(self):
+        return self._all_mcq_marks
+
+    @property
+    def overall_mean(self):
+        return round(stat.mean(self.all_mcq_marks), 1)
+
+    @property
+    def overall_median(self):
+        return round(stat.median(self.all_mcq_marks), 1)
+
+    @property
+    def overall_maximum(self):
+        return round(max(self.all_mcq_marks), 1)
+
+    @property
+    def overall_minimum(self):
+        return round(min(self.all_mcq_marks), 1)
+
+    @property
+    def overall_standard_deviation(self):
+        return round(stat.stdev(self.all_mcq_marks), 1)
+
 def main():
     extractor = ExamCsvExtractor()
     exam_results = extractor.get_exam_results(csv_path="data/Test_1.csv")
 
     db = DatabaseAccess(exam_results)
     overallstats = OverallExamStats(db)
+    overallmcqstats = OverallMcqStats(db)
 
+    print("Overall Exam Stats")
     print("All results (out of 100): ", overallstats.total_marks)
     print("mean (out of 100): ", overallstats.mean)
     print("median (out of 100): ", overallstats.median)
     print("maximum (out of 100): ", overallstats.maximum)
     print("minimum (out of 100): ", overallstats.minimum)
     print("standard deviation (out of 100): ", overallstats.standard_deviation)
-    print("marks distribution (out of 100): ", overallstats.get_marks_distribution())
+    print("marks distribution (out of 100): ", overallstats.get_marks_distribution(), end="\n\n")
+
+    print("Overall MCQ stats (only)")
+    print("All results (out of 100): ", overallmcqstats.all_mcq_marks)
+    print("mean (out of 100): ", overallmcqstats.overall_mean)
+    print("median (out of 100): ", overallmcqstats.overall_median)
+    print("maximum (out of 100): ", overallmcqstats.overall_maximum)
+    print("minimum (out of 100): ", overallmcqstats.overall_minimum)
+    print("standard deviation (out of 100): ", overallmcqstats.overall_standard_deviation)
+    # print("marks distribution (out of 100): ", overallmcqstats.get_marks_distribution())
 
 if __name__ == "__main__":
     main()

@@ -146,6 +146,32 @@ class OverallExamStats:
     def standard_deviation(self):
         return round(min(self.total_marks), 1)
 
+    def get_marks_distribution(self):
+        marks_distributions = {
+            "<30" : 0,
+            "30-40s" : 0,
+            "50s" : 0,
+            "60s" : 0,
+            "70s" : 0,
+            "≥80" : 0
+        }
+
+        for mark in self.total_marks:
+            if mark < 30:
+                marks_distributions["<30"] += 1
+            elif mark >= 30 and mark < 50:
+                marks_distributions["30-40s"] += 1
+            elif mark >= 50 and mark < 60:
+                marks_distributions["50s"] += 1
+            elif mark >= 60 and mark < 70:
+                marks_distributions["60s"] += 1
+            elif mark >= 70 and mark < 80:
+                marks_distributions["70s"] += 1
+            else:
+                marks_distributions["≥80"] += 1
+
+        return marks_distributions
+
 def main():
     extractor = ExamCsvExtractor()
     exam_results = extractor.get_exam_results(csv_path="data/Test_1.csv")
@@ -159,6 +185,7 @@ def main():
     print("maximum (out of 100): ", overallstats.maximum)
     print("minimum (out of 100): ", overallstats.minimum)
     print("standard deviation (out of 100): ", overallstats.standard_deviation)
+    print("marks distribution (out of 100): ", overallstats.get_marks_distribution())
 
 if __name__ == "__main__":
     main()

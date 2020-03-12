@@ -1,4 +1,5 @@
 import csv
+import sqlite3
 
 class ExamResults:
 	
@@ -63,18 +64,75 @@ class ExamCsvExtractor:
 
 		return exam_results
 
+class DatabaseAccess:
+
+	def __init__(self, exam_results):
+		self._connection = sqlite3.connect(":memory:")
+
+		self._connection.execute("""
+		CREATE TABLE Results 
+		(
+			id          INTEGER,
+            type        VARCHAR(20),
+			username	VARCHAR(20),
+            lastname    VARCHAR(20),
+            firstname   VARCHAR(20),
+            max_marks   DOUBLE,
+			marks       DOUBLE
+		)
+		""")
+
+		for result in exam_results:
+
+			self._connection.execute(
+				"""INSERT INTO Results VALUES (?, ?, ?, ?, ?, ?, ?)""",
+				[result.question_id, result.question_type, result.username, result.lastname, result.firstname, result.max_marks, result.marks]
+			)
+
+		self._connection.commit()
+
+	def get_connection(self):
+		return self._connection
+
+
+class OverallExamStats:
+
+    def __init__(self, database_obj):
+        self._db = database_obj
+        self._total_marks = self.__get_all_student_marks()
+
+    def __get_all_student_marks(self):
+        cursor = self._db.get_connection().cursor()
+
+        results = cursor.execute("""
+		SELECT (SUM(marks) / 
+			(SELECT SUM(max_marks) / COUNT(DISTINCT username) 
+			FROM Results
+		)) * 100 AS X 
+		FROM Results 
+		GROUP BY username 
+		ORDER BY X ASC
+		""").fetchall()
+
+        marks_list = []
+
+        for result in results:
+            marks_list.append(result[0])
+
+        return marks_list
+
+    @property
+    def total_marks(self):
+        return self._total_marks
+
 def main():
     extractor = ExamCsvExtractor()
     exam_results = extractor.get_exam_results(csv_path="data/Test_1.csv")
 
-    for result in exam_results:
-        print(f"""id: {result.question_id}
-type: {result.question_type}
-username: {result.username}
-lastname: {result.lastname}
-firstname: {result.firstname}
-max_marks: {result.max_marks}
-marks: {result.marks}""", end="\n\n")
+    db = DatabaseAccess(exam_results)
+    overallstats = OverallExamStats(db)
+
+    print("All results (out of 100): ", overallstats.total_marks)
 
 if __name__ == "__main__":
     main()

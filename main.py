@@ -312,7 +312,7 @@ class OverallEssayStats:
 
 def main():
     extractor = ExamCsvExtractor()
-    exam_results = extractor.get_exam_results(csv_path="data/Test_1.csv")
+    exam_results = extractor.get_exam_results(csv_path="data/testinputs/six_student_results.csv")
 
     db = DatabaseAccess(exam_results)
     overallstats = OverallExamStats(db)

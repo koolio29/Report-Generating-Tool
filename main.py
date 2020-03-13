@@ -369,10 +369,6 @@ class GraphGenerator:
         )
 
         bar_chart.x_labels = x_labels
-
-        # FIXME: Bar width is too huge for graphs with a single bar
-        # FIXME: Fix the scaling issue on y axis
-        # TODO: have the upper value set for both mcq and essay stats
         bar_chart.add("y_label", data_dict)
 
         self.__save_graph(bar_chart)
@@ -383,6 +379,9 @@ class GraphGenerator:
     @property
     def abs_path_to_graph(self):
         return self._abs_path_to_graph
+
+def get_max_value_from_dict(mydict):
+    return mydict[max(mydict, key=mydict.get)]
 
 def main():
     extractor = ExamCsvExtractor()
@@ -405,8 +404,7 @@ def main():
     print("marks distribution (out of 100): ", overallstats.get_marks_distribution(), end="\n\n")
 
     overallgraph = GraphGenerator("example", "overallstats")
-    tempmax = overallstats.get_marks_distribution()[max(overallstats.get_marks_distribution(), key=overallstats.get_marks_distribution().get)]
-    overallgraph.generate_bar_graph(overallstats.get_marks_distribution(), title="COMP000000 Overall Stats", max_y=tempmax)
+    overallgraph.generate_bar_graph(overallstats.get_marks_distribution(), title="COMP000000 Overall Stats", max_y=get_max_value_from_dict(overallstats.get_marks_distribution()))
 
     print("Overall MCQ stats (only)")
     print("All results (out of 100): ", overallmcqstats.all_mcq_marks)

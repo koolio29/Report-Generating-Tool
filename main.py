@@ -295,8 +295,6 @@ class OverallEssayStats:
         LIMIT 1
         """).fetchone()
 
-        print(type(round(result[0], 1)))
-
         return round(result[0], 1)
 
     @property
@@ -359,7 +357,16 @@ class GraphGenerator:
         for key in data_dict.keys():
             data_points.append(data_dict[key])
 
-        bar_chart = pygal.Bar(style=pygal.style.BlueStyle, show_legend=False, title=title, range=(min_y, max_y) if max_y is not None else None)
+        bar_chart = pygal.Bar(
+            style=pygal.style.BlueStyle, 
+            show_legend=False, 
+            title=title, 
+            range=(min_y, max_y) if max_y != None else None,
+            width=500,
+            height=500,
+            min_scale=0,
+            max_scale=100
+        )
 
         bar_chart.x_labels = x_labels
 
@@ -379,8 +386,8 @@ class GraphGenerator:
 
 def main():
     extractor = ExamCsvExtractor()
-    # exam_results = extractor.get_exam_results(csv_path="data/exam.csv")
-    exam_results = extractor.get_exam_results(csv_path="data/testinputs/multiple_essay_questions.csv")
+    exam_results = extractor.get_exam_results(csv_path="data/exam.csv")
+    # exam_results = extractor.get_exam_results(csv_path="data/testinputs/multiple_essay_questions.csv")
 
     db = DatabaseAccess(exam_results)
     
@@ -398,7 +405,8 @@ def main():
     print("marks distribution (out of 100): ", overallstats.get_marks_distribution(), end="\n\n")
 
     overallgraph = GraphGenerator("example", "overallstats")
-    overallgraph.generate_bar_graph(overallstats.get_marks_distribution(), title="COMP000000 Overall Stats")
+    tempmax = overallstats.get_marks_distribution()[max(overallstats.get_marks_distribution(), key=overallstats.get_marks_distribution().get)]
+    overallgraph.generate_bar_graph(overallstats.get_marks_distribution(), title="COMP000000 Overall Stats", max_y=tempmax)
 
     print("Overall MCQ stats (only)")
     print("All results (out of 100): ", overallmcqstats.all_mcq_marks)

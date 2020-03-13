@@ -1,5 +1,6 @@
 import csv
 import sqlite3
+import pygal
 import statistics as stat
 
 class ExamResults:
@@ -177,6 +178,7 @@ class OverallMcqStats:
     def __init__(self, database_obj):
         self._db = database_obj
         self._all_mcq_marks = self.__get_all_student_mcq_marks()
+        self._mcq_max_marks = self.__get_max_marks()
 
     def __get_all_student_mcq_marks(self):
         cursor = self._db.get_connection().cursor()
@@ -198,9 +200,25 @@ class OverallMcqStats:
 
         return marks_list
 
+    def __get_max_marks(self):
+        cursor = self._db.get_connection().cursor()
+
+        result = cursor.execute("""
+        SELECT max_marks 
+        FROM Results 
+        WHERE type="auto"
+        LIMIT 1 
+        """).fetchone()
+
+        return round(result[0], 1)
+
     @property
     def all_mcq_marks(self):
         return self._all_mcq_marks
+
+    @property
+    def mcq_max_marks(self):
+        return self._mcq_max_marks
 
     @property
     def overall_mean(self):
@@ -245,6 +263,7 @@ class OverallEssayStats:
     def __init__(self, database_obj):
         self._db = database_obj
         self._all_essay_marks = self.__get_all_student_essay_marks()
+        self._essay_max_marks = self.__get_max_marks()
 
     def __get_all_student_essay_marks(self):
         cursor = self._db.get_connection().cursor()
@@ -266,10 +285,27 @@ class OverallEssayStats:
 
         return marks_list
 
+    def __get_max_marks(self):
+        cursor = self._db.get_connection().cursor()
+
+        result = cursor.execute("""
+        SELECT max_marks 
+        FROM Results 
+        WHERE type="manual" 
+        LIMIT 1
+        """).fetchone()
+
+        print(type(round(result[0], 1)))
+
+        return round(result[0], 1)
 
     @property
     def all_essay_marks(self):
         return self._all_essay_marks
+
+    @property
+    def essay_max_marks(self):
+        return self._essay_max_marks
 
     @property
     def overall_mean(self):
@@ -309,12 +345,45 @@ class OverallEssayStats:
 
         return individual_avgs
 
+class GraphGenerator:
+
+    def __init__(self, path2save, graph_name, save_format="svg"):
+        self._save_path = path2save
+        self._graph_name = graph_name
+        self._abs_path_to_graph = f"{path2save}/{graph_name}.{save_format}" 
+
+    def generate_bar_graph(self, data_dict, title="COMP000000 Stats", min_y=0, max_y=None):
+        x_labels = tuple(data_dict.keys())
+        data_points = []
+
+        for key in data_dict.keys():
+            data_points.append(data_dict[key])
+
+        bar_chart = pygal.Bar(style=pygal.style.BlueStyle, show_legend=False, title=title, range=(min_y, max_y) if max_y is not None else None)
+
+        bar_chart.x_labels = x_labels
+
+        # FIXME: Bar width is too huge for graphs with a single bar
+        # FIXME: Fix the scaling issue on y axis
+        # TODO: have the upper value set for both mcq and essay stats
+        bar_chart.add("y_label", data_dict)
+
+        self.__save_graph(bar_chart)
+
+    def __save_graph(self, graphObj):
+        graphObj.render_to_file(self.abs_path_to_graph)
+
+    @property
+    def abs_path_to_graph(self):
+        return self._abs_path_to_graph
 
 def main():
     extractor = ExamCsvExtractor()
-    exam_results = extractor.get_exam_results(csv_path="data/testinputs/six_student_results.csv")
+    # exam_results = extractor.get_exam_results(csv_path="data/exam.csv")
+    exam_results = extractor.get_exam_results(csv_path="data/testinputs/multiple_essay_questions.csv")
 
     db = DatabaseAccess(exam_results)
+    
     overallstats = OverallExamStats(db)
     overallmcqstats = OverallMcqStats(db)
     overallessaystats = OverallEssayStats(db)
@@ -328,6 +397,9 @@ def main():
     print("standard deviation (out of 100): ", overallstats.standard_deviation)
     print("marks distribution (out of 100): ", overallstats.get_marks_distribution(), end="\n\n")
 
+    overallgraph = GraphGenerator("example", "overallstats")
+    overallgraph.generate_bar_graph(overallstats.get_marks_distribution(), title="COMP000000 Overall Stats")
+
     print("Overall MCQ stats (only)")
     print("All results (out of 100): ", overallmcqstats.all_mcq_marks)
     print("mean (out of 100): ", overallmcqstats.overall_mean)
@@ -337,6 +409,9 @@ def main():
     print("standard deviation (out of 100): ", overallmcqstats.overall_standard_deviation)
     print("MCQ averages (out of 1): ", overallmcqstats.get_individual_mcq_avgs(), end="\n\n")
 
+    overallmcq = GraphGenerator("example", "overallmcq")
+    overallmcq.generate_bar_graph(overallmcqstats.get_individual_mcq_avgs(), title="MCQs Stats", max_y=overallmcqstats.mcq_max_marks)
+
     print("Overall ESSAY stats (only)")
     print("All results (out of 100): ", overallessaystats.all_essay_marks)
     print("mean (out of 100): ", overallessaystats.overall_mean)
@@ -345,6 +420,9 @@ def main():
     print("minimum (out of 100): ", overallessaystats.overall_minimum)
     print("standard deviation (out of 100): ", overallessaystats.overall_standard_deviation)
     print("ESSAY averages (out of 5): ", overallessaystats.get_individual_essay_avgs())
+
+    overallessay = GraphGenerator("example", "overallessay")
+    overallessay.generate_bar_graph(overallessaystats.get_individual_essay_avgs(), title="Essays Stats", max_y=overallessaystats.essay_max_marks)
 
 def h():
     print("h")

@@ -3,4 +3,5 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from main import ExamCsvExtractor
+from main import ExamCsvExtractor, DatabaseAccess
+from main import OverallExamStats, OverallMcqStats, OverallEssayStats

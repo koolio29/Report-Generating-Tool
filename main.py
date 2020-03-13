@@ -430,8 +430,5 @@ def main():
     overallessay = GraphGenerator("example", "overallessay")
     overallessay.generate_bar_graph(overallessaystats.get_individual_essay_avgs(), title="Essays Stats", max_y=overallessaystats.essay_max_marks)
 
-def h():
-    print("h")
-
 if __name__ == "__main__":
     main()

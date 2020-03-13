@@ -346,7 +346,8 @@ def main():
     print("standard deviation (out of 100): ", overallessaystats.overall_standard_deviation)
     print("ESSAY averages (out of 5): ", overallessaystats.get_individual_essay_avgs())
 
-
+def h():
+    print("h")
 
 if __name__ == "__main__":
     main()

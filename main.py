@@ -379,7 +379,6 @@ class GraphGenerator:
     def __save_graph(self, graphObj):
         graphObj.render_to_file(self.abs_path_to_graph)
 
-    # TODO: This property is to be removed if the md file and the graphs are generated into the same directory always
     @property
     def abs_path_to_graph(self):
         return self._abs_path_to_graph

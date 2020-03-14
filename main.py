@@ -472,8 +472,6 @@ def generate_report(course_id, csv_path, report_save_path, template_dir, templat
 
     mdgenerator.generate_file()
 
-    print(">> Finished report generation")
-
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser(description="Create exam feedback reports")
 

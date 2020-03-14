@@ -1,6 +1,7 @@
 import csv
 import sqlite3
 import pygal
+import jinja2
 import statistics as stat
 
 class ExamResults:
@@ -347,7 +348,7 @@ class GraphGenerator:
 
     def __init__(self, path2save, graph_name, save_format="svg"):
         self._save_path = path2save
-        self._graph_name = graph_name
+        self._graph_name = f"{graph_name}.{save_format}"
         self._abs_path_to_graph = f"{path2save}/{graph_name}.{save_format}" 
 
     def generate_bar_graph(self, data_dict, title="COMP000000 Stats", min_y=0, max_y=None):
@@ -376,9 +377,50 @@ class GraphGenerator:
     def __save_graph(self, graphObj):
         graphObj.render_to_file(self.abs_path_to_graph)
 
+    # TODO: This property is to be removed if the md file and the graphs are generated into the same directory always
     @property
     def abs_path_to_graph(self):
         return self._abs_path_to_graph
+
+    @property
+    def graph_name(self):
+        return self._graph_name
+
+class MarkDownGenerator:
+
+    def __init__(self, path2save, template_dst, template_name, report_name, data):
+        self._template_dst = template_dst
+        self._template_name = template_name
+        self._data = data
+        self._abs_path_to_md = f"{path2save}/{report_name}"
+
+    def __write_file(self, contents):
+        try:
+            file2write = open(self.abs_path_to_md, "w")
+            file2write.write(contents)
+            file2write.close()
+        except Exception as e:
+            print("Error: Error writing markdown file")
+            print(e)
+            return False
+        
+        return True
+            
+    def __read_template(self):
+        fileloader = jinja2.FileSystemLoader(f"{self._template_dst}/")
+        environment = jinja2.Environment(loader=fileloader)
+
+        template_to_use = environment.get_template(self._template_name)
+        template_output = template_to_use.render(data=self._data)
+
+        return template_output
+
+    def generate_report(self):
+        return self.__write_file(self.__read_template())
+
+    @property
+    def abs_path_to_md(self):
+        return self._abs_path_to_md
 
 def get_max_value_from_dict(mydict):
     return mydict[max(mydict, key=mydict.get)]
@@ -394,41 +436,40 @@ def main():
     overallmcqstats = OverallMcqStats(db)
     overallessaystats = OverallEssayStats(db)
 
-    print("Overall Exam Stats")
-    print("All results (out of 100): ", overallstats.total_marks)
-    print("mean (out of 100): ", overallstats.mean)
-    print("median (out of 100): ", overallstats.median)
-    print("maximum (out of 100): ", overallstats.maximum)
-    print("minimum (out of 100): ", overallstats.minimum)
-    print("standard deviation (out of 100): ", overallstats.standard_deviation)
-    print("marks distribution (out of 100): ", overallstats.get_marks_distribution(), end="\n\n")
+    overallgraph = GraphGenerator("example", "stats1")
+    overallgraph.generate_bar_graph(overallstats.get_marks_distribution(), title="COMP111111 Overall Stats", max_y=get_max_value_from_dict(overallstats.get_marks_distribution()))
 
-    overallgraph = GraphGenerator("example", "overallstats")
-    overallgraph.generate_bar_graph(overallstats.get_marks_distribution(), title="COMP000000 Overall Stats", max_y=get_max_value_from_dict(overallstats.get_marks_distribution()))
-
-    print("Overall MCQ stats (only)")
-    print("All results (out of 100): ", overallmcqstats.all_mcq_marks)
-    print("mean (out of 100): ", overallmcqstats.overall_mean)
-    print("median (out of 100): ", overallmcqstats.overall_median)
-    print("maximum (out of 100): ", overallmcqstats.overall_maximum)
-    print("minimum (out of 100): ", overallmcqstats.overall_minimum)
-    print("standard deviation (out of 100): ", overallmcqstats.overall_standard_deviation)
-    print("MCQ averages (out of 1): ", overallmcqstats.get_individual_mcq_avgs(), end="\n\n")
-
-    overallmcq = GraphGenerator("example", "overallmcq")
+    overallmcq = GraphGenerator("example", "mcq1")
     overallmcq.generate_bar_graph(overallmcqstats.get_individual_mcq_avgs(), title="MCQs Stats", max_y=overallmcqstats.mcq_max_marks)
 
-    print("Overall ESSAY stats (only)")
-    print("All results (out of 100): ", overallessaystats.all_essay_marks)
-    print("mean (out of 100): ", overallessaystats.overall_mean)
-    print("median (out of 100): ", overallessaystats.overall_median)
-    print("maximum (out of 100): ", overallessaystats.overall_maximum)
-    print("minimum (out of 100): ", overallessaystats.overall_minimum)
-    print("standard deviation (out of 100): ", overallessaystats.overall_standard_deviation)
-    print("ESSAY averages (out of 5): ", overallessaystats.get_individual_essay_avgs())
-
-    overallessay = GraphGenerator("example", "overallessay")
+    overallessay = GraphGenerator("example", "essay1")
     overallessay.generate_bar_graph(overallessaystats.get_individual_essay_avgs(), title="Essays Stats", max_y=overallessaystats.essay_max_marks)
+
+    mdgenerator = MarkDownGenerator("example", "templates", "default_template.md", "COMP111111.md", data={
+        "unit_code" : "COMP111111",
+        "exam_mean" : overallstats.mean,
+        "exam_median" : overallstats.median,
+        "exam_stdev" : overallstats.standard_deviation,
+        "exam_min" : overallstats.minimum,
+        "exam_max" : overallstats.maximum,
+        "exam_distr_graph" : overallgraph.graph_name,
+        "mcq_overall_mean" : overallmcqstats.overall_mean,
+        "mcq_overall_median" : overallmcqstats.overall_median,
+        "mcq_overall_stdev" : overallmcqstats.overall_standard_deviation,
+        "mcq_overall_min" : overallmcqstats.overall_minimum,
+        "mcq_overall_max" : overallmcqstats.overall_maximum,
+        "mcq_avgs" : overallmcq.graph_name,
+        "essay_overall_mean" : overallessaystats.overall_mean,
+        "essay_overall_median" : overallessaystats.overall_median,
+        "essay_overall_stdev" : overallessaystats.overall_standard_deviation,
+        "essay_overall_min" : overallessaystats.overall_minimum,
+        "essay_overall_max" : overallessaystats.overall_maximum,
+        "essay_avgs" : overallessay.graph_name 
+    })
+
+    mdgenerator.generate_report()
+
+    print(">> Finished Script")
 
 if __name__ == "__main__":
     main()

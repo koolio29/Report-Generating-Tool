@@ -495,6 +495,10 @@ if __name__ == "__main__":
     if args.multiple:
         csv_files = [file for file in os.listdir(args.data) if file.endswith(".csv")]
         course_names = [name.split(".")[0] for name in csv_files]
+
+        if len(csv_files) == 0:
+            print("No csv files in the directory")
+            exit(0)
     else:
         course_names = [args.course]
 

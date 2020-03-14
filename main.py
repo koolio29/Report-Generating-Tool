@@ -499,6 +499,9 @@ if __name__ == "__main__":
         if len(csv_files) == 0:
             print("No csv files in the directory")
             exit(0)
+    elif os.path.isdir(args.path):
+        print(">> You have passed in a directory. If you want to use a directory containing multiple csv files then pass in the '-m' flag as well")
+        exit(0)
     else:
         course_names = [args.course]
 

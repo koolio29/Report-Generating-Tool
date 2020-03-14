@@ -24,4 +24,4 @@ The graph below shows the distrubution of marks of the exam.
 
 ### Manually Marked Questions
 
-<img src="{{ data.essay_avgs_avgs }}" width="550" height="375">
+<img src="{{ data.essay_avgs }}" width="550" height="375">

@@ -2,6 +2,8 @@ import csv
 import sqlite3
 import pygal
 import jinja2
+import argparse
+import os
 import statistics as stat
 
 class ExamResults:
@@ -407,7 +409,7 @@ class MarkDownGenerator:
         return True
             
     def __read_template(self):
-        fileloader = jinja2.FileSystemLoader(f"{self._template_dst}/")
+        fileloader = jinja2.FileSystemLoader(f"{self._template_dst}")
         environment = jinja2.Environment(loader=fileloader)
 
         template_to_use = environment.get_template(self._template_name)
@@ -415,7 +417,7 @@ class MarkDownGenerator:
 
         return template_output
 
-    def generate_report(self):
+    def generate_file(self):
         return self.__write_file(self.__read_template())
 
     @property
@@ -425,9 +427,9 @@ class MarkDownGenerator:
 def get_max_value_from_dict(mydict):
     return mydict[max(mydict, key=mydict.get)]
 
-def main():
+def generate_report(course_id, csv_path, report_save_path, template_dir, template2use): # template_dir, template2use
     extractor = ExamCsvExtractor()
-    exam_results = extractor.get_exam_results(csv_path="data/exam.csv")
+    exam_results = extractor.get_exam_results(csv_path=csv_path)
     # exam_results = extractor.get_exam_results(csv_path="data/testinputs/multiple_essay_questions.csv")
 
     db = DatabaseAccess(exam_results)
@@ -436,17 +438,18 @@ def main():
     overallmcqstats = OverallMcqStats(db)
     overallessaystats = OverallEssayStats(db)
 
-    overallgraph = GraphGenerator("example", "stats1")
-    overallgraph.generate_bar_graph(overallstats.get_marks_distribution(), title="COMP111111 Overall Stats", max_y=get_max_value_from_dict(overallstats.get_marks_distribution()))
+    # report_save_path
+    overallgraph = GraphGenerator(path2save=report_save_path, graph_name="exam_distribution")
+    overallgraph.generate_bar_graph(overallstats.get_marks_distribution(), title=f"{course_id} Exam Distribution", max_y=get_max_value_from_dict(overallstats.get_marks_distribution()))
 
-    overallmcq = GraphGenerator("example", "mcq1")
-    overallmcq.generate_bar_graph(overallmcqstats.get_individual_mcq_avgs(), title="MCQs Stats", max_y=overallmcqstats.mcq_max_marks)
+    overallmcq = GraphGenerator(path2save=report_save_path, graph_name="mcq_averages")
+    overallmcq.generate_bar_graph(overallmcqstats.get_individual_mcq_avgs(), title="Automarked Question Average", max_y=overallmcqstats.mcq_max_marks)
 
-    overallessay = GraphGenerator("example", "essay1")
-    overallessay.generate_bar_graph(overallessaystats.get_individual_essay_avgs(), title="Essays Stats", max_y=overallessaystats.essay_max_marks)
+    overallessay = GraphGenerator(path2save=report_save_path, graph_name="essay_averages")
+    overallessay.generate_bar_graph(overallessaystats.get_individual_essay_avgs(), title="Manually Marked Question Averages", max_y=overallessaystats.essay_max_marks)
 
-    mdgenerator = MarkDownGenerator("example", "templates", "default_template.md", "COMP111111.md", data={
-        "unit_code" : "COMP111111",
+    mdgenerator = MarkDownGenerator(path2save=report_save_path, template_dst=template_dir, template_name=template2use, report_name=f"{course_id}.md", data={
+        "unit_code" : course_id,
         "exam_mean" : overallstats.mean,
         "exam_median" : overallstats.median,
         "exam_stdev" : overallstats.standard_deviation,
@@ -467,9 +470,47 @@ def main():
         "essay_avgs" : overallessay.graph_name 
     })
 
-    mdgenerator.generate_report()
+    mdgenerator.generate_file()
 
-    print(">> Finished Script")
+    print(">> Finished report generation")
 
 if __name__ == "__main__":
-    main()
+    argparser = argparse.ArgumentParser(description="Create exam feedback reports")
+
+    # TODO: Change the path for the default template and data when switching to production
+    # The templates and the dataset would in the root directory in production
+    argparser.add_argument("-c", "--course", help="Course id. By Default it is COMP000000", default="COMP000000")
+    argparser.add_argument("-d", "--data", help="path or filename to the exam data. If '--multi-report is passed in, this becomes a path for the directory containing all exam data files.'", default="data/exam.csv")
+    argparser.add_argument("-t", "--template", help="Path for the report template to be used.", default="templates")
+    argparser.add_argument("-m", "--multiple", help="Tells the script that it needs to generate multiple reports. If this flag is True, it would treat the '--data' flag as a path to a directory containing all exam data where each exam data file is named after the course unit.", action="store_true")
+
+    args = argparser.parse_args()
+
+    template_dir = args.template if  args.template == "templates" else os.path.dirname(args.template)
+    template_name = "default_template.md" if args.template == "templates" else os.path.basename(args.template)
+
+    csv_files = None
+    course_names = None
+
+    if args.multiple:
+        csv_files = [file for file in os.listdir(args.data) if file.endswith(".csv")]
+        course_names = [name.split(".")[0] for name in csv_files]
+    else:
+        course_names = [args.course]
+
+    for index in range(0, len(course_names)):
+        save_path = f"{os.getcwd()}/example/{course_names[index]}" # TODO: remove the "examples/" after tests
+
+        try:
+            os.mkdir(save_path)
+        except Exception as e:
+            print("cannot make a directory")
+            print(e)
+
+        generate_report(
+            csv_path = f"{args.data}/{csv_files[index]}" if args.multiple else args.data,
+            course_id = course_names[index],
+            report_save_path = save_path, 
+            template_dir = template_dir,
+            template2use = template_name
+        )

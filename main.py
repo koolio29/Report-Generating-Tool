@@ -496,14 +496,19 @@ if __name__ == "__main__":
         if len(csv_files) == 0:
             print("No csv files in the directory")
             exit(0)
-    elif os.path.isdir(args.path):
+    elif os.path.isdir(args.data):
         print(">> You have passed in a directory. If you want to use a directory containing multiple csv files then pass in the '-m' flag as well")
         exit(0)
     else:
         course_names = [args.course]
 
+    # creating an output directory to save the reports to
+    if not os.path.isdir("outputs"):
+        os.mkdir("outputs")
+        print("Created outputs folder")
+
     for index in range(0, len(course_names)):
-        save_path = f"{os.getcwd()}/example/{course_names[index]}" # TODO: remove the "examples/" after tests
+        save_path = f"{os.getcwd()}/outputs/{course_names[index]}" # TODO: remove the "examples/" after tests
 
         try:
             os.mkdir(save_path)

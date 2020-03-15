@@ -2,5 +2,5 @@ venv
 example
 .vscode
 __pycache__
-
+outputs
 *.sqlite

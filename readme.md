@@ -73,10 +73,10 @@ Example:
 ```
 (venv)$ python3 main.py --data data --multiple
 ```
-When you run this in the terminal, the script will a new directory for each of the csv file found in the path passed in as `--data` and will name the directory after their respective csv file name.
+When you run this in the terminal, the script will create a new directory for each of the csv file found in the path passed in as `--data` and will be named after their respective csv file name. The files generated can be found in the 'outputs' directory.
 
 ### Using a Different Template
-To use a different template for the report, you will need to use `--template` flag to pass in the path of the template you want to use. It should be noted that the template should follow the jinja2 syntax and use the required correct placeholders regardless of whether it is a markdown or a latex file.
+To use a different template for the report, you will need to use `--template` flag to pass in the path of the template you want to use. It should be noted that the template should follow the jinja2 syntax and use the required placeholders regardless of whether it is a markdown or a latex file.
 
 By default, the script looks uses the template found in 'templates/default_template.md'
 

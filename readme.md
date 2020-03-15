@@ -1,6 +1,6 @@
 # Report Generating Tool
 
-This Python script allows lecturers to generate exam feedback reports. In the current version of the script, lecturers can generate single or multiple feedback reports using csv files downloaded from BlackBoard.
+This Python script allows lecturers to generate exam feedback reports. In the current version of the script, lecturers can generate single or multiple feedback reports (in markdown) using csv files downloaded from BlackBoard.
 
 The report generated contains:
 * Basic statistics of the overall exam.

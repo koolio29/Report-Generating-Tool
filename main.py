@@ -426,10 +426,9 @@ class MarkDownGenerator:
 def get_max_value_from_dict(mydict):
     return mydict[max(mydict, key=mydict.get)]
 
-def generate_report(course_id, csv_path, report_save_path, template_dir, template2use): # template_dir, template2use
+def generate_report(course_id, csv_path, report_save_path, template_dir, template2use):
     extractor = ExamCsvExtractor()
     exam_results = extractor.get_exam_results(csv_path=csv_path)
-    # exam_results = extractor.get_exam_results(csv_path="data/testinputs/multiple_essay_questions.csv")
 
     db = DatabaseAccess(exam_results)
     
@@ -474,8 +473,6 @@ def generate_report(course_id, csv_path, report_save_path, template_dir, templat
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser(description="Create exam feedback reports")
 
-    # TODO: Change the path for the default template and data when switching to production
-    # The templates and the dataset would in the root directory in production
     argparser.add_argument("-c", "--course", help="Course id. By Default it is COMP000000", default="COMP000000")
     argparser.add_argument("-d", "--data", help="path or filename to the exam data. If '--multi-report' is passed in, this becomes a path for the directory containing all exam data files.'", default="data/exam.csv")
     argparser.add_argument("-t", "--template", help="Path for the report template to be used.", default="templates")
@@ -497,7 +494,7 @@ if __name__ == "__main__":
             print("No csv files in the directory")
             exit(0)
     elif os.path.isdir(args.data):
-        print(">> You have passed in a directory. If you want to use a directory containing multiple csv files then pass in the '-m' flag as well")
+        print("You have passed in a directory. If you want to use a directory containing multiple csv files then pass in the '-m' flag as well")
         exit(0)
     else:
         course_names = [args.course]
@@ -505,7 +502,6 @@ if __name__ == "__main__":
     # creating an output directory to save the reports to
     if not os.path.isdir("outputs"):
         os.mkdir("outputs")
-        print("Created outputs folder")
 
     for index in range(0, len(course_names)):
         save_path = f"{os.getcwd()}/outputs/{course_names[index]}"

@@ -508,7 +508,7 @@ if __name__ == "__main__":
         print("Created outputs folder")
 
     for index in range(0, len(course_names)):
-        save_path = f"{os.getcwd()}/outputs/{course_names[index]}" # TODO: remove the "examples/" after tests
+        save_path = f"{os.getcwd()}/outputs/{course_names[index]}"
 
         try:
             os.mkdir(save_path)

@@ -59,10 +59,10 @@ In order to generate a single report, you will need to atleast pass following fl
 
 Example:
 ```
-(venv)$ python3 main.py --data path/to/exam.csv --course COMP123456
+(venv)$ python3 main.py --data data/exam.csv --course COMP111111
 ```
 
-When you run this in the terminal, the script will create a new directory named after the course ID and place the generated markdown file and graphs inside it. The new directory can be found in the same directory as the `main.py`.
+When you run this in the terminal, the script will create a new directory called 'outputs' and create new folders within this directory, named after the course ID, to save the generated report along with the graphs. The 'output' can be found in the same directory as the `main.py`.
 
 ### Multiple Report Generation
 To generate multiple reports, you will need to atleast pass the following flags:
@@ -71,7 +71,7 @@ To generate multiple reports, you will need to atleast pass the following flags:
 
 Example:
 ```
-(venv)$ python3 main.py --data path/to/csv/files --multiple
+(venv)$ python3 main.py --data data --multiple
 ```
 When you run this in the terminal, the script will a new directory for each of the csv file found in the path passed in as `--data` and will name the directory after their respective csv file name.
 

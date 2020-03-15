@@ -115,6 +115,6 @@ When creating a custom template for the script to use, it will need to contain t
 * [Pygal](http://www.pygal.org/en/stable/documentation/) - Used to create and save graphs.
 * [Jinja2](https://jinja.palletsprojects.com/en/2.11.x/) - Used to render templates.
 
-## Further Extensions
+## Possible Extensions
 * [ ] Generate feedback reports for students.  
 * [ ] Simple graphical user interface.  

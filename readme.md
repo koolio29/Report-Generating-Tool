@@ -54,8 +54,8 @@ optional arguments:
 
 ### Single Report Generation
 In order to generate a single report, you will need to atleast pass following flags:
-* __--course__: This is the course ID. By default this is set by 'COMP000000'.
-* __--data__: This is the path to the csv file. By default this is set to 'data/exam.csv'.
+* `--course` :- This is the course ID. By default this is set by 'COMP000000'.
+* `--data` :- This is the path to the csv file. By default this is set to 'data/exam.csv'.
 
 Example:
 ```
@@ -66,17 +66,17 @@ When you run this in the terminal, the script will create a new directory named 
 
 ### Multiple Report Generation
 To generate multiple reports, you will need to atleast pass the following flags:
-* __--multiple__: This flag tells the script to treat the '--data' flag as a path to a directory containing all the exam data in csv format where each csv file is named after the course id.
-* __--data__: This is the path to the directory containing all the csv files.
+* `--multiple` :- This flag tells the script to treat the `--data` flag as a path to a directory containing all the exam data in csv format where each csv file is named after the course id.
+* `--data` :- This is the path to the directory containing all the csv files.
 
 Example:
 ```
 $(venv) python3 main.py --data path/to/csv/files --multiple
 ```
-When you run this in the terminal, the script will a new directory for each of the csv file found in the path passed in as '--data' and will name the directory after their respective csv file name.
+When you run this in the terminal, the script will a new directory for each of the csv file found in the path passed in as `--data` and will name the directory after their respective csv file name.
 
 ### Using a Different Template
-To use a different template for the report, you will need to use '--template' flag to pass in the path of the template you want to use. It should be noted that the template should follow the jinja2 syntax and use the required correct placeholders regardless of whether it is a markdown or a latex file.
+To use a different template for the report, you will need to use `--template` flag to pass in the path of the template you want to use. It should be noted that the template should follow the jinja2 syntax and use the required correct placeholders regardless of whether it is a markdown or a latex file.
 
 By default, the script looks uses the template found in 'templates/default_template.md'
 
@@ -86,6 +86,34 @@ $(venv) python3 main.py --course COMP612535 --data path/to/csv/file.csv --templa
 ```
 
 When you run this in the terminal, it will use the new template when creating the report.
+
+### Template Placeholders
+When creating a custom template for the script to use, it will need to contain the following placeholders:
+
+* data.unit_code
+* data.exam_mean
+* data.exam_median
+* data.exam_stdev
+* data.exam_min
+* data.exam_max
+* data.exam_distr_graph
+* data.mcq_overall_mean
+* data.mcq_overall_median
+* data.mcq_overall_stdev
+* data.mcq_overall_min
+* data.mcq_overall_max
+* data.mcq_avgs
+* data.essay_overall_mean
+* data.essay_overall_median
+* data.essay_overall_stdev
+* data.essay_overall_min
+* data.essay_overall_max
+* data.essay_avgs
+
+## Built With
+
+* [Pygal](http://www.pygal.org/en/stable/documentation/) - Used to create and save graphs.
+* [Jinja2](https://jinja.palletsprojects.com/en/2.11.x/) - Used to render templates.
 
 ## Further Extensions
 __TBC__

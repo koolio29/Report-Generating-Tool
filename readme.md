@@ -51,3 +51,26 @@ optional arguments:
 ```
 
 ## Usage
+
+### Single Report Generation
+In order to generate a single report, you will need to atleast pass following flags:
+* __--course__: This is the course ID. By default this is set by 'COMP000000'.
+* __--data__: This is the path to the csv file. By default this is set to 'data/exam.csv'.
+
+Example:
+```
+$(venv) python3 main.py --data path/to/exam.csv --course COMP123456
+```
+
+When you run this in the terminal, the script will create a new directory named after the course ID and place the generated markdown file and graphs inside it. The new directory can be found in the same directory as the `main.py`.
+
+### Multiple Report Generation
+To generate multiple reports, you will need to atleast pass the following flags:
+* __--multiple__: This flag tells the script to treat the '--data' flag as a path to a directory containing all the exam data in csv format where each csv file is named after the course id.
+* __--data__: This is the path to the directory containing all the csv files.
+
+Example:
+```
+$(venv) python3 main.py --data path/to/csv/files --multiple
+```
+When you run this in the terminal, the script will a new directory for each of the csv file found in the path passed in as '--data' and will name the directory after their respective csv file name.

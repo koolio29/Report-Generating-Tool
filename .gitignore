@@ -3,6 +3,6 @@ example
 .vscode
 __pycache__
 outputs
-tests
+tests/.
 data/testinputs
 *.sqlite

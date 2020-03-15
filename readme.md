@@ -10,7 +10,7 @@ The report generated contains:
 ## Getting Started
 The following instructions will help you to get the script up and running on your local machine.
 
-To run the script, Python 3.6 or greater is required. After cloning this repository, you will need to create a virtual environment. To create a virtual enviroment type in the following command (after opening the terminal in the directory where the repository is):
+To run the script, Python 3.6 or greater is required. After cloning this repository, you will need to create a virtual environment. To create a virtual enviroment type in the following command (after opening the terminal in the directory where the repository located):
 ```
 $ python3 -m venv venv
 ```
@@ -116,4 +116,5 @@ When creating a custom template for the script to use, it will need to contain t
 * [Jinja2](https://jinja.palletsprojects.com/en/2.11.x/) - Used to render templates.
 
 ## Further Extensions
-__TBC__
+* [ ] Generate feedback reports for students.  
+* [ ] Simple graphical user interface.  

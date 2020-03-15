@@ -22,13 +22,13 @@ $ source venv/bin/activate
 
 Now install the dependencies for the script by typing:
 ```
-$(venv) pip3 install -r requirements.txt
+(venv)$ pip3 install -r requirements.txt
 ```
 
 You can now pass in the `--help` flag to view the flags used by the script.
 
 ```
-$(venv) python3 main.py --help
+(venv)$ python3 main.py --help
 
 usage: main.py [-h] [-c COURSE] [-d DATA] [-t TEMPLATE] [-m]
 
@@ -59,7 +59,7 @@ In order to generate a single report, you will need to atleast pass following fl
 
 Example:
 ```
-$(venv) python3 main.py --data path/to/exam.csv --course COMP123456
+(venv)$ python3 main.py --data path/to/exam.csv --course COMP123456
 ```
 
 When you run this in the terminal, the script will create a new directory named after the course ID and place the generated markdown file and graphs inside it. The new directory can be found in the same directory as the `main.py`.
@@ -71,7 +71,7 @@ To generate multiple reports, you will need to atleast pass the following flags:
 
 Example:
 ```
-$(venv) python3 main.py --data path/to/csv/files --multiple
+(venv)$ python3 main.py --data path/to/csv/files --multiple
 ```
 When you run this in the terminal, the script will a new directory for each of the csv file found in the path passed in as `--data` and will name the directory after their respective csv file name.
 
@@ -82,7 +82,7 @@ By default, the script looks uses the template found in 'templates/default_templ
 
 Example:
 ```
-$(venv) python3 main.py --course COMP612535 --data path/to/csv/file.csv --template path/to/template/newtemplate.md
+(venv)$ python3 main.py --course COMP612535 --data path/to/csv/file.csv --template path/to/template/newtemplate.md
 ```
 
 When you run this in the terminal, it will use the new template when creating the report.

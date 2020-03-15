@@ -3,4 +3,5 @@ example
 .vscode
 __pycache__
 outputs
+tests
 *.sqlite

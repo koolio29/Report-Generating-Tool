@@ -477,7 +477,7 @@ if __name__ == "__main__":
     # TODO: Change the path for the default template and data when switching to production
     # The templates and the dataset would in the root directory in production
     argparser.add_argument("-c", "--course", help="Course id. By Default it is COMP000000", default="COMP000000")
-    argparser.add_argument("-d", "--data", help="path or filename to the exam data. If '--multi-report is passed in, this becomes a path for the directory containing all exam data files.'", default="data/exam.csv")
+    argparser.add_argument("-d", "--data", help="path or filename to the exam data. If '--multi-report' is passed in, this becomes a path for the directory containing all exam data files.'", default="data/exam.csv")
     argparser.add_argument("-t", "--template", help="Path for the report template to be used.", default="templates")
     argparser.add_argument("-m", "--multiple", help="Tells the script that it needs to generate multiple reports. If this flag is True, it would treat the '--data' flag as a path to a directory containing all exam data where each exam data file is named after the course unit.", action="store_true")
 

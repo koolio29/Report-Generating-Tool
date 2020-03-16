@@ -495,26 +495,23 @@ if __name__ == "__main__":
     csv_files = None
     course_names = None
 
-    if args.multiple:
+    if not os.path.exists(args.data):
+        print(f"'{args.data}' does not exist!. Please pass in a valid path for '--data'.")
+        exit(1)
+    elif args.multiple:
 
-        if not os.path.exists(args.data):
-            print(f"'{args.data}' data path does not exist. Please try again.") 
-            exit(1)
         if os.path.isfile(args.data):
-            print(f"'{args.data}' is a path to a file. Please pass in a path to a directory containing csv files when using '-m' flag.")
+            print(f"'{args.data}' is a path to a file. Please pass in a path to a directory containing csv files when using '--multiple' flag.")
             exit(1)
 
         csv_files = [file for file in os.listdir(args.data) if file.endswith(".csv")]
         course_names = [name.split(".")[0] for name in csv_files]
 
         if len(csv_files) == 0:
-            print("No csv files in the directory")
+            print("No csv files in the directory!.")
             exit(1)
-    elif not os.path.exists(args.data):
-        print(f"'{args.data}' does not exist. Please try again.")
-        exit(1)
     elif os.path.isdir(args.data): # checks if the data "path" provided is not a directory
-        print(f"'{args.data}' is a path to directory. Please use the '-m' flag if you want to generate multiple reports.")
+        print(f"'{args.data}' is a path to directory. Please use the '--multiple' flag if you want to generate multiple reports.")
         exit(1)
     else:
         course_names = [args.course]

@@ -4,6 +4,7 @@ import pygal
 import jinja2
 import argparse
 import os
+import errno
 import statistics as stat
 
 class ExamResults:
@@ -487,19 +488,33 @@ if __name__ == "__main__":
     if not os.path.exists(f"{template_dir}/{template_name}"):
         print(f"Cannot find template in the provided path: '{template_dir}/{template_name}'.")
         exit(1)
+    elif os.path.isdir(f"{template_dir}/{template_name}"):
+        print(f"'{template_dir}/{template_name}' is a path to a directory. Please pass in a path for the template file.")
+        exit(1)
 
     csv_files = None
     course_names = None
 
     if args.multiple:
+
+        if not os.path.exists(args.data):
+            print(f"'{args.data}' data path does not exist. Please try again.") 
+            exit(1)
+        if os.path.isfile(args.data):
+            print(f"'{args.data}' is a path to a file. Please pass in a path to a directory containing csv files when using '-m' flag.")
+            exit(1)
+
         csv_files = [file for file in os.listdir(args.data) if file.endswith(".csv")]
         course_names = [name.split(".")[0] for name in csv_files]
 
         if len(csv_files) == 0:
             print("No csv files in the directory")
             exit(1)
+    elif not os.path.exists(args.data):
+        print(f"'{args.data}' does not exist. Please try again.")
+        exit(1)
     elif os.path.isdir(args.data): # checks if the data "path" provided is not a directory
-        print("You have passed in a directory. If you want to use a directory containing multiple csv files then pass in the '-m' flag as well")
+        print(f"'{args.data}' is a path to directory. Please use the '-m' flag if you want to generate multiple reports.")
         exit(1)
     else:
         course_names = [args.course]
@@ -513,9 +528,10 @@ if __name__ == "__main__":
 
         try:
             os.mkdir(save_path)
-        except Exception as e:
-            print("cannot make a directory")
-            print(e)
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                print("Cannot make 'output' directory!.")
+                print(e)
 
         generate_report(
             csv_path = f"{args.data}/{csv_files[index]}" if args.multiple else args.data,
@@ -524,3 +540,5 @@ if __name__ == "__main__":
             template_dir = template_dir,
             template2use = template_name
         )
+
+    print("Reports have been created in 'outputs' folder.")

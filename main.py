@@ -483,6 +483,11 @@ if __name__ == "__main__":
     template_dir = args.template if  args.template == "templates" else os.path.dirname(args.template)
     template_name = "default_template.md" if args.template == "templates" else os.path.basename(args.template)
 
+    # Checking if the template exists
+    if not os.path.exists(f"{template_dir}/{template_name}"):
+        print(f"Cannot find template in the provided path: '{template_dir}/{template_name}'.")
+        exit(1)
+
     csv_files = None
     course_names = None
 
@@ -492,10 +497,10 @@ if __name__ == "__main__":
 
         if len(csv_files) == 0:
             print("No csv files in the directory")
-            exit(0)
-    elif os.path.isdir(args.data):
+            exit(1)
+    elif os.path.isdir(args.data): # checks if the data "path" provided is not a directory
         print("You have passed in a directory. If you want to use a directory containing multiple csv files then pass in the '-m' flag as well")
-        exit(0)
+        exit(1)
     else:
         course_names = [args.course]
 

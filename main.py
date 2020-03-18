@@ -529,6 +529,7 @@ if __name__ == "__main__":
             if e.errno != errno.EEXIST:
                 print("Cannot make 'output' directory!.")
                 print(e)
+                exit(1)
 
         generate_report(
             csv_path = f"{args.data}/{csv_files[index]}" if args.multiple else args.data,

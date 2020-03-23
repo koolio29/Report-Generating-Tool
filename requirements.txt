@@ -1,4 +1,14 @@
+agate==1.6.1
+Babel==2.8.0
+isodate==0.6.0
 Jinja2==2.11.1
+leather==0.3.3
 MarkupSafe==1.1.1
+parsedatetime==2.5
 pkg-resources==0.0.0
 pygal==2.4.0
+python-slugify==4.0.0
+pytimeparse==1.1.8
+pytz==2019.3
+six==1.14.0
+text-unidecode==1.3

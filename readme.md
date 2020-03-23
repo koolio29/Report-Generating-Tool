@@ -78,7 +78,7 @@ When you run this in the terminal, the script will create a new directory for ea
 ### Using a Different Template
 To use a different template for the report, you will need to use `--template` flag to pass in the path of the template you want to use. It should be noted that the template should follow the jinja2 syntax and use the required placeholders regardless of whether it is a markdown or a latex file.
 
-By default, the script looks uses the template found in 'templates/default_template.md'
+By default, the script looks for the template found in 'templates/default_template.md'
 
 Example:
 ```
@@ -88,33 +88,19 @@ Example:
 When you run this in the terminal, it will use the new template when creating the report.
 
 ### Template Placeholders
-When creating a custom template for the script to use, it will need to contain the following placeholders:
+The table below shows the placeholders to use when creating your own templates for the report.
 
-* data.unit_code
-* data.exam_mean
-* data.exam_median
-* data.exam_stdev
-* data.exam_min
-* data.exam_max
-* data.exam_distr_graph
-* data.mcq_overall_mean
-* data.mcq_overall_median
-* data.mcq_overall_stdev
-* data.mcq_overall_min
-* data.mcq_overall_max
-* data.mcq_avgs
-* data.essay_overall_mean
-* data.essay_overall_median
-* data.essay_overall_stdev
-* data.essay_overall_min
-* data.essay_overall_max
-* data.essay_avgs
+| Placeholder             | Description                                                                                                                         |
+|-------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
+| data.unit_code          | Unit code of the course (Course ID).                                                                                                |
+| data.exam_stat_table    | A markdown table containing basic statistics of the exam. Overall MCQ and Essay statistics included.                                |  
+| data.distribution_graph | A path to a graph in `svg` format showing the exam mark distributions.                                                              |
+| data.mcq_graph          | A path to a graph in `svg` format showing the averages of each MCQ question in the exam.                                            |
+| data.essay_graph        | A path to a graph in `svg` format showing the averages of each essay question in the exam.                                          |
+| data.essay_feedback     | A list containing dictionaries which contains basic statistics for each essay question. See the default_template.md for an example. |
 
 ## Built With
 
 * [Pygal](http://www.pygal.org/en/stable/documentation/) - Used to create and save graphs.
 * [Jinja2](https://jinja.palletsprojects.com/en/2.11.x/) - Used to render templates.
-
-## Possible Extensions
-* [ ] Generate feedback reports for students.  
-* [ ] Simple graphical user interface.  
+* [Agate](https://agate.readthedocs.io/en/1.6.1/) - Used to process csv files and generate statistics.

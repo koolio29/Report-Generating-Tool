@@ -7,6 +7,8 @@ The report generated contains:
 * Basic statistics of the overall auto/manually marked questions.
 * Graphs to visualize the averages individual questions.
 
+*__Note:__ For the latest features, pull `develop` branch.*
+
 ## Getting Started
 The following instructions will help you to get the script up and running on your local machine.
 

@@ -101,6 +101,34 @@ The table below shows the placeholders to use when creating your own templates f
 | data.essay_graph        | A path to a graph in `svg` format showing the averages of each essay question in the exam.                                          |
 | data.essay_feedback     | A list containing dictionaries which contains basic statistics for each essay question. See the default_template.md for an example. |
 
+## Running the tests
+Test suites are provided which can be used to run a set of unit tests. To run a test suite, enter the following command in the terminal:
+
+```
+(venv)$ python3 StatsTestSuite.py
+```
+
+Expected output:
+```
+test_max (stats_tests.TestExamStats.TestExamStats) ... ok
+test_mean (stats_tests.TestExamStats.TestExamStats) ... ok
+test_median (stats_tests.TestExamStats.TestExamStats) ... ok
+test_min (stats_tests.TestExamStats.TestExamStats) ... ok
+test_stdev (stats_tests.TestExamStats.TestExamStats) ... ok
+test_get_marks_distribution (stats_tests.TestOverallStats.TestOverallStats) ... ok
+test_get_mcq_avgs (stats_tests.TestMCQStats.TestMCQStats) ... ok
+test_max_mcq_marks (stats_tests.TestMCQStats.TestMCQStats) ... ok
+test_get_essay_avgs (stats_tests.TestEssayStats.TestMCQStats) ... ok
+test_get_individual_essay_stats (stats_tests.TestEssayStats.TestMCQStats) ... ok
+test_max_essay_mark (stats_tests.TestEssayStats.TestMCQStats) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.066s
+
+OK
+```
+
+
 ## Built With
 
 * [Pygal](http://www.pygal.org/en/stable/documentation/) - Used to create and save graphs.

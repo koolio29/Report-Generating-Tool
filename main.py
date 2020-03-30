@@ -113,8 +113,10 @@ def get_md_stats_table(overall_stats, mcq_stats, essay_stats):
     ----------
     overall_stats : OverallStats
         OverallStats instance to be used
+
     mcq_stats : MCQStats
         MCQstats instance to be used
+
     essay_stats : EssayStats
         EssayStats instance to be used
 
@@ -143,12 +145,16 @@ class ExamStats:
     -------
     mean()
         gets the mean marks of the given agate.Table (out of a 100)
+
     median()
         gets the median marks of the given agate.Table (out of a 100)
+
     min()
         gets the minimum marks of the given agate.Table (out of a 100)
+
     max()
         gets the maximum marks of the given agate.Table (out of a 100)
+        
     stdev()
         gets the standard deviation of the given exam results in 
         the agate.Table

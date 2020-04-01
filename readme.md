@@ -57,11 +57,11 @@ optional arguments:
 ### Single Report Generation
 In order to generate a single report, you will need to atleast pass following flags:
 * `--course` :- This is the course ID. By default this is set by 'COMP000000'.
-* `--data` :- This is the path to the csv file. By default this is set to 'data/exam.csv'.
+* `--data` :- This is the path to the csv file. By default this is set to 'data/full_exam.csv'.
 
 Example:
 ```
-(venv)$ python3 main.py --data data/exam.csv --course COMP111111
+(venv)$ python3 main.py --data data/full_exam.csv --course COMP111111
 ```
 
 When you run this in the terminal, the script will create a new directory called 'outputs' and create new folders within this directory, named after the course ID, to save the generated report along with the graphs. The 'output' can be found in the same directory as the `main.py`.

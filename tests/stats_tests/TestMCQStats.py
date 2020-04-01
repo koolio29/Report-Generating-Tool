@@ -10,7 +10,7 @@ class TestMCQStats(unittest.TestCase):
 
     def test_get_mcq_avgs(self):
         self.assertEqual(self._exam_table.get_mcq_avgs(), 
-            {'1': 0.67, '2': 0.83, '3': 0.33, '4': 0.5, '5': 0.67})
+            {'1': 0.5, '2': 0.62, '3': 0.75, '4': 0.75})
         self.assertEqual(str(type(self._exam_table.get_mcq_avgs())), 
             "<class 'dict'>")
 

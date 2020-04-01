@@ -15,7 +15,7 @@ from main import get_exam_agate_table, simplify_agate_table
 # The test agate table loaded beforehand to make sure the unit test classes
 # dont have to load the table repeatedly
 test_table =  simplify_agate_table(
-    get_exam_agate_table(f"{sys.path[0]}/data/test_data.csv")
+    get_exam_agate_table(f"{sys.path[0]}/data/full_exam.csv")
 )
 
 # Resetting the sys.path. If not changed back to its original state, the unit

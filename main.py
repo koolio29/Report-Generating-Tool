@@ -56,11 +56,29 @@ def simplify_agate_table(exam_table):
         An agate.Table which contains the exam results in a simplified format
     """
 
-    column_names = ["username", "last_name", "first_name", "question_id",
-        "question_type", "max_marks", "marks"]
+    column_names = [
+        "username", 
+        "last_name", 
+        "first_name", 
+        "question_id",
+        "question_type",
+        "question",
+        "answer",
+        "max_marks", 
+        "marks"
+    ]
 
-    column_types = [agate.Text(), agate.Text(), agate.Text(), agate.Number(),
-        agate.Text(), agate.Number(), agate.Number()]
+    column_types = [
+        agate.Text(), 
+        agate.Text(), 
+        agate.Text(),             
+        agate.Number(),
+        agate.Text(), 
+        agate.Text(),
+        agate.Text(),
+        agate.Number(), 
+        agate.Number()
+    ]
 
     rows = []
     for row in exam_table:
@@ -70,6 +88,8 @@ def simplify_agate_table(exam_table):
             row["First Name"],
             row["Question ID"].split(" ")[-1],
             "Auto" if row["Auto Score"] is not None else "Manual",
+            row["Question"],
+            row["Answer"],
             row["Possible Points"],
             row["Auto Score"] if row["Auto Score"] is not None else \
                 row["Manual Score"]
@@ -98,7 +118,9 @@ def get_exam_agate_table(csv_name):
         "Last Name" : agate.Text(),
         "First Name" : agate.Text(),
         "Question ID" : agate.Text(),
+        "Question" : agate.Text(),
         "Possible Points" : agate.Text(),
+        "Answer" : agate.Text(),
         "Auto Score" : agate.Number(),
         "Manual Score" : agate.Number()
     })
@@ -720,7 +742,7 @@ if __name__ == "__main__":
         help="path or filename to the exam data. If '--multi-report' is " \
             + "passed in, this becomes a path for the directory " \
             + " containing all exam data files.", 
-        default="data/exam.csv"
+        default="data/full_exam.csv"
     )
     argparser.add_argument(
         "-t", "--template", 

@@ -712,7 +712,7 @@ def generate_md(course_id, csv_path, save_path, template_dir, template_name):
     """
     # Get the file encoding type
     file_encoding = get_file_encoding(csv_path)
-    print("Encoding: ", file_encoding)
+    
     # Turn the exam csv file into a agate.Table
     exam_table = get_exam_agate_table(csv_path, file_encoding=file_encoding)
     simplified_table = simplify_agate_table(exam_table)

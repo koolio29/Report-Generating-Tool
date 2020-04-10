@@ -1,9 +1,42 @@
-import agate
-import jinja2
-import pygal
 import argparse
 import os
 import errno
+
+import agate
+import jinja2
+import pygal
+from chardet.universaldetector import UniversalDetector
+
+def get_file_encoding(csv_file):
+    """
+    Gets the type of file encoding
+
+    Parameters
+    ----------
+    csv_file : str
+        Name of the csv file
+
+    Returns
+    --------
+    str
+        Type of the encoding
+    """
+    encoding_detector = UniversalDetector()
+
+    try:
+        with open(csv_file, "rb") as file:
+            for line in file.readlines():
+                encoding_detector.feed(line)
+                if encoding_detector.done:
+                    break
+    except Exception as e:
+        print("Exception occured when reading the csv file.")
+        print("Error: ", e)
+        exit(1)
+    else:
+        encoding_detector.close()
+    
+    return encoding_detector.result["encoding"]
 
 def get_max_value_from_dict(mydict):
     """
@@ -97,7 +130,7 @@ def simplify_agate_table(exam_table):
     
     return agate.Table(rows, column_names, column_types)
 
-def get_exam_agate_table(csv_name):
+def get_exam_agate_table(csv_name, file_encoding="utf-8"):
     """
     Creates an Agate Table for the exam results available in the given csv file
 
@@ -125,7 +158,8 @@ def get_exam_agate_table(csv_name):
         "Manual Score" : agate.Number()
     })
 
-    return agate.Table.from_csv(csv_name, column_types=type_tester)
+    return agate.Table.from_csv(csv_name, column_types=type_tester, 
+                                                    encoding=file_encoding)
 
 def get_md_stats_table(overall_stats, mcq_stats, essay_stats):
     """
@@ -676,8 +710,11 @@ def generate_md(course_id, csv_path, save_path, template_dir, template_name):
         Name of the template to be used
 
     """
+    # Get the file encoding type
+    file_encoding = get_file_encoding(csv_path)
+    
     # Turn the exam csv file into a agate.Table
-    exam_table = get_exam_agate_table(csv_path)
+    exam_table = get_exam_agate_table(csv_path, file_encoding=file_encoding)
     simplified_table = simplify_agate_table(exam_table)
 
     # Generate the basic stats

@@ -1,7 +1,7 @@
 import unittest
 
-from context import OverallStats
-from context import test_table as table
+from .context import OverallStats
+from .context import test_table as table
 
 class TestOverallStats(unittest.TestCase):
 

@@ -1,7 +1,7 @@
 import unittest
 
-from context import MCQStats
-from context import test_table as table
+from .context import MCQStats
+from .context import test_table as table
 
 class TestMCQStats(unittest.TestCase):
 

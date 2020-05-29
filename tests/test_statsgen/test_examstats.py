@@ -1,7 +1,7 @@
 import unittest
 
-from context import ExamStats
-from context import test_table as table
+from .context import ExamStats
+from .context import test_table as table
 
 import context
 

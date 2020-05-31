@@ -6,11 +6,9 @@ from .context import test_table as table
 class TestEssayStats(unittest.TestCase):
 
     def setUp(self):
-        print("1")
         self._exam_table = EssayStats(table)
 
     def test_get_essay_avgs(self):
-        print("2")
         self.assertEqual(self._exam_table.get_essay_avgs(), 
             {'5': 3.19})
         self.assertEqual(str(type(self._exam_table.get_essay_avgs())), 

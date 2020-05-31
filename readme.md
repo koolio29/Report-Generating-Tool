@@ -115,19 +115,15 @@ test_mean (test_statsgen.test_examstats.TestExamStats) ... ok
 test_median (test_statsgen.test_examstats.TestExamStats) ... ok
 test_min (test_statsgen.test_examstats.TestExamStats) ... ok
 test_stdev (test_statsgen.test_examstats.TestExamStats) ... ok
-test_get_essay_avgs (test_statsgen.test_essaystats.TestEssayStats) ... 1
-2
-ok
-test_get_individual_essay_stats (test_statsgen.test_essaystats.TestEssayStats) ... 1
-ok
-test_max_essay_mark (test_statsgen.test_essaystats.TestEssayStats) ... 1
-ok
+test_get_essay_avgs (test_statsgen.test_essaystats.TestEssayStats) ... ok
+test_get_individual_essay_stats (test_statsgen.test_essaystats.TestEssayStats) ... ok
+test_max_essay_mark (test_statsgen.test_essaystats.TestEssayStats) ... ok
 test_get_marks_distribution (test_statsgen.test_overallstats.TestOverallStats) ... ok
 test_get_mcq_avgs (test_statsgen.test_mcqstats.TestMCQStats) ... ok
 test_max_mcq_marks (test_statsgen.test_mcqstats.TestMCQStats) ... ok
 
 ----------------------------------------------------------------------
-Ran 11 tests in 0.023s
+Ran 11 tests in 0.029s
 
 OK
 ```

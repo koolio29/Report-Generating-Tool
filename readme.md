@@ -102,35 +102,35 @@ The table below shows the placeholders to use when creating your own templates f
 | data.essay_feedback     | A list containing dictionaries which contains basic statistics for each essay question. See the default_template.md for an example. |
 
 ## Running the tests
-Test suites are provided which can be used to run a set of unit tests. To run a test suite, enter the following command in the terminal:
+`runtests.py` is the test suite module which can be used to run all the unit tests. To run the tests, enter the following command in the terminal:
 
 ```
-(venv)$ python3 StatsTestSuite.py
+(venv)$ python3 tests/runtests.py.py
 ```
 
 Expected output:
 ```
-test_max (stats_tests.TestExamStats.TestExamStats) ... ok
-test_mean (stats_tests.TestExamStats.TestExamStats) ... ok
-test_median (stats_tests.TestExamStats.TestExamStats) ... ok
-test_min (stats_tests.TestExamStats.TestExamStats) ... ok
-test_stdev (stats_tests.TestExamStats.TestExamStats) ... ok
-test_get_marks_distribution (stats_tests.TestOverallStats.TestOverallStats) ... ok
-test_get_mcq_avgs (stats_tests.TestMCQStats.TestMCQStats) ... ok
-test_max_mcq_marks (stats_tests.TestMCQStats.TestMCQStats) ... ok
-test_get_essay_avgs (stats_tests.TestEssayStats.TestMCQStats) ... ok
-test_get_individual_essay_stats (stats_tests.TestEssayStats.TestMCQStats) ... ok
-test_max_essay_mark (stats_tests.TestEssayStats.TestMCQStats) ... ok
+test_max (test_statsgen.test_examstats.TestExamStats) ... ok
+test_mean (test_statsgen.test_examstats.TestExamStats) ... ok
+test_median (test_statsgen.test_examstats.TestExamStats) ... ok
+test_min (test_statsgen.test_examstats.TestExamStats) ... ok
+test_stdev (test_statsgen.test_examstats.TestExamStats) ... ok
+test_get_essay_avgs (test_statsgen.test_essaystats.TestEssayStats) ... ok
+test_get_individual_essay_stats (test_statsgen.test_essaystats.TestEssayStats) ... ok
+test_max_essay_mark (test_statsgen.test_essaystats.TestEssayStats) ... ok
+test_get_marks_distribution (test_statsgen.test_overallstats.TestOverallStats) ... ok
+test_get_mcq_avgs (test_statsgen.test_mcqstats.TestMCQStats) ... ok
+test_max_mcq_marks (test_statsgen.test_mcqstats.TestMCQStats) ... ok
 
 ----------------------------------------------------------------------
-Ran 11 tests in 0.066s
+Ran 11 tests in 0.029s
 
 OK
 ```
-
 
 ## Built With
 
 * [Pygal](http://www.pygal.org/en/stable/documentation/) - Used to create and save graphs.
 * [Jinja2](https://jinja.palletsprojects.com/en/2.11.x/) - Used to render templates.
 * [Agate](https://agate.readthedocs.io/en/1.6.1/) - Used to process csv files and generate statistics.
+* [Chardet](https://chardet.readthedocs.io/en/latest/index.html) - Used to indentify file encoding type.

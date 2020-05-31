@@ -1,9 +1,9 @@
 import unittest
 
-from context import EssayStats
-from context import test_table as table
+from .context import EssayStats
+from .context import test_table as table
 
-class TestMCQStats(unittest.TestCase):
+class TestEssayStats(unittest.TestCase):
 
     def setUp(self):
         self._exam_table = EssayStats(table)

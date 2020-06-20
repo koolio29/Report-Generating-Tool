@@ -19,7 +19,8 @@ def __filter_questions(self, should_filter):
 
 def difficulty(self, filter_items=True, in_percentage=True):
     """
-    Calculates the difficulty for each item (question) given in the test
+    Calculates the difficulty for each item (question) given in the test.  This
+    can be only done on MCQ questions.
 
     Parameters
     ----------
@@ -58,7 +59,8 @@ def difficulty(self, filter_items=True, in_percentage=True):
 
 def discrimination(self, filter_items=True):
     """
-    Calculates discrimination for all items in the exam
+    Calculates discrimination for all items in the exam. This can be only done
+    on MCQ questions.
 
     Parameters
     ----------

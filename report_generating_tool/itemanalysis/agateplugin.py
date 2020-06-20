@@ -17,13 +17,13 @@ def __filter_questions(self, should_filter):
     return  self.where(lambda row: row["question_type"] == "Auto") \
         if should_filter else self
 
-def difficulty(self, filter=True, in_percentage=True):
+def difficulty(self, filter_items=True, in_percentage=True):
     """
     Calculates the difficulty for each item (question) given in the test
 
     Parameters
     ----------
-    filter : Boolean, optional
+    filter_items : Boolean, optional
         If True, it will try to filter out the agate table to get rid of essay
         questions
 
@@ -35,7 +35,7 @@ def difficulty(self, filter=True, in_percentage=True):
     dict 
         A dictionary containing the item number and its difficulty as a value
     """
-    temp_table = __filter_questions(self, True)
+    temp_table = __filter_questions(self, filter_items)
 
     temp_table = temp_table \
         .group_by("question_id") \
@@ -56,8 +56,68 @@ def difficulty(self, filter=True, in_percentage=True):
 
     return difficulty_dict
 
-def discrimination(self):
-    pass
+def discrimination(self, filter_items=True):
+    """
+    Calculates discrimination for all items in the exam
+
+    Parameters
+    ----------
+    filter_items : Boolean, optional
+        If True, it will try to filter out the agate table to get rid of essay
+        questions
+
+    Returns
+    -------
+    dict 
+        A dictionary containing the item number and its discrimination value
+    """
+    working_table = __filter_questions(self, filter_items)
+
+    # Step 1: order students total marks in ascending order
+    step_one_table = working_table \
+        .group_by("username") \
+        .aggregate([
+            ("total_marks", agate.Sum("marks"))
+        ]) \
+        .order_by("total_marks")
+
+    # Step 2: extract the upper and lower 27% of students
+    total_students = step_one_table.aggregate(agate.Count("username"))
+    student_limit = (27 * total_students) // 100
+
+    lower_table = step_one_table.limit(student_limit)
+    upper_table = step_one_table \
+        .order_by("total_marks", reverse=True) \
+        .limit(student_limit)
+
+    lower_students = []
+    upper_students = []
+
+    for row in lower_table:
+        lower_students.append(str(row["username"]))
+
+    for row in upper_table:
+        upper_students.append(str(row["username"]))
+
+    lower_table = working_table \
+        .where(lambda row: row["username"] in lower_students)
+    upper_table = working_table \
+        .where(lambda row: row["username"] in upper_students)
+
+
+    # Step 3: get item difficulty for upper and lower 27% of students
+    lower_difficulty = difficulty(lower_table, filter_items=False, 
+                                                        in_percentage=False)
+    upper_difficulty = difficulty(upper_table, filter_items=False, 
+                                                        in_percentage=False)
+
+    # Step 4: subtract lower difficulty from upper difficulty
+    discrimination_dict = {}
+
+    for k in lower_difficulty.keys():
+        discrimination_dict[k] = upper_difficulty[k] - lower_difficulty[k]
+
+    return discrimination_dict
 
 def standardDeviation(self):
     pass

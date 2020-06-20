@@ -1,5 +1,22 @@
 import agate
 
+def __filter_questions(self, should_filter):
+    """
+    Filter Essay questions out of the table
+
+    Parameters
+    ----------
+    should_filter : Boolean
+        If True, attempts to filter out essay questions
+
+    Returns
+    -------
+    agate.Table
+        An agate Table
+    """
+    return  self.where(lambda row: row["question_type"] == "Auto") \
+        if should_filter else self
+
 def difficulty(self, filter=True, in_percentage=True):
     """
     Calculates the difficulty for each item (question) given in the test
@@ -18,12 +35,7 @@ def difficulty(self, filter=True, in_percentage=True):
     dict 
         A dictionary containing the item number and its difficulty as a value
     """
-    temp_table = None
-
-    if filter:
-        temp_table = self.where(lambda row: row["question_type"] == "Auto")
-    else:
-        temp_table = self
+    temp_table = __filter_questions(self, True)
 
     temp_table = temp_table \
         .group_by("question_id") \

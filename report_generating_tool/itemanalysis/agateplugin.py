@@ -106,7 +106,6 @@ def discrimination(self, filter_items=True):
     upper_table = working_table \
         .where(lambda row: row["username"] in upper_students)
 
-
     # Step 3: get item difficulty for upper and lower 27% of students
     lower_difficulty = difficulty(lower_table, filter_items=False, 
                                                         in_percentage=False)
@@ -122,7 +121,18 @@ def discrimination(self, filter_items=True):
     return discrimination_dict
 
 def standardDeviation(self):
-    pass
+    working_table = self \
+        .group_by("question_id") \
+        .aggregate([
+            ("stdev", agate.StDev("marks"))
+        ])
+
+    stdev_dict = {}
+
+    for row in working_table:
+        stdev_dict[str(row["question_id"])] = float(row["stdev"])
+
+    return stdev_dict
 
 def standardError(self):
     pass

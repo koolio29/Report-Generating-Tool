@@ -1,3 +1,5 @@
+import math
+
 import agate
 
 def __filter_questions(self, should_filter):
@@ -143,7 +145,24 @@ def standardDeviation(self):
     return stdev_dict
 
 def standardError(self):
-    pass
+    working_table = self \
+        .group_by("question_id") \
+        .aggregate([
+            ("stdev", agate.StDev("marks")),
+            ("question_count", agate.Count())
+        ]) \
+        .compute([
+            ("stderr", agate.Formula(agate.Number(),
+                lambda row: float(row["stdev"]) 
+                / math.sqrt(float(row["question_count"]))))
+        ])
+
+    stderr_dict = {}
+
+    for row in working_table:
+        stderr_dict[str(row["question_id"])] = float(row["stderr"])
+
+    return stderr_dict
 
 agate.Table.difficulty = difficulty
 agate.Table.discrimination = discrimination

@@ -140,7 +140,7 @@ def standardDeviation(self):
     stdev_dict = {}
 
     for row in working_table:
-        stdev_dict[str(row["question_id"])] = float(row["stdev"])
+        stdev_dict[int(row["question_id"])] = float(row["stdev"])
 
     return stdev_dict
 
@@ -168,7 +168,7 @@ def standardError(self):
     stderr_dict = {}
 
     for row in working_table:
-        stderr_dict[str(row["question_id"])] = float(row["stderr"])
+        stderr_dict[int(row["question_id"])] = float(row["stderr"])
 
     return stderr_dict
 

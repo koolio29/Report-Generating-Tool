@@ -121,6 +121,14 @@ def discrimination(self, filter_items=True):
     return discrimination_dict
 
 def standardDeviation(self):
+    """
+    Calculates standard deviation for all of the items in the exam
+
+    Returns
+    -------
+    dict
+        A dictionary containing the question numbers and its standard deviation
+    """
     working_table = self \
         .group_by("question_id") \
         .aggregate([

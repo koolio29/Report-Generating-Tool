@@ -121,9 +121,13 @@ test_max_essay_mark (test_statsgen.test_essaystats.TestEssayStats) ... ok
 test_get_marks_distribution (test_statsgen.test_overallstats.TestOverallStats) ... ok
 test_get_mcq_avgs (test_statsgen.test_mcqstats.TestMCQStats) ... ok
 test_max_mcq_marks (test_statsgen.test_mcqstats.TestMCQStats) ... ok
+test_difficulty (test_itemanalysis.test_agateplugin.TestAgatePlugin) ... ok
+test_discrimination (test_itemanalysis.test_agateplugin.TestAgatePlugin) ... ok
+test_standardDeviation (test_itemanalysis.test_agateplugin.TestAgatePlugin) ... ok
+test_standardError (test_itemanalysis.test_agateplugin.TestAgatePlugin) ... ok
 
 ----------------------------------------------------------------------
-Ran 11 tests in 0.029s
+Ran 15 tests in 0.047s
 
 OK
 ```

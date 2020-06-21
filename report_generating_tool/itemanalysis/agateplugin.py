@@ -145,6 +145,14 @@ def standardDeviation(self):
     return stdev_dict
 
 def standardError(self):
+    """
+    Calculate standard error for all items in the exam
+
+    Returns
+    -------
+    dict
+        A dictionary containing the question numbers and its standard error.
+    """
     working_table = self \
         .group_by("question_id") \
         .aggregate([

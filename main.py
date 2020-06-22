@@ -3,6 +3,7 @@ import os
 import errno
 
 from report_generating_tool.reportgen import OverallReportGenerator
+from report_generating_tool.reportgen import LecturerReportGenerator
 
 ABS_SCRIPT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ""))
 
@@ -10,6 +11,8 @@ ABS_SCRIPT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ""))
 # TODO: Probably need to add a flag to allow to specify a save path
 DEFAULT_DATA_PATH = ABS_SCRIPT_PATH + "/data/full_exam.csv"
 DEFAULT_TEMPLATE_PATH = ABS_SCRIPT_PATH + "/templates"
+
+LECTURER_TEMPLATE = "lecturer_template.md"
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser(
@@ -94,6 +97,8 @@ if __name__ == "__main__":
         os.mkdir("outputs")
 
     report_generator = OverallReportGenerator(template_dir, template_name)
+    lecturer_report_gen = LecturerReportGenerator(template_dir, 
+                                                    LECTURER_TEMPLATE)
 
     for index in range(0, len(course_names)):
         # will need to append ".." to create output directory in the project root
@@ -108,6 +113,13 @@ if __name__ == "__main__":
                 exit(1)
 
         report_generator.generate_report(
+            course_id = course_names[index],
+            csv_path = f"{args.data}/{csv_files[index]}" if args.multiple \
+                else args.data,
+            save_path = save_path
+        )
+
+        lecturer_report_gen.generate_report(
             course_id = course_names[index],
             csv_path = f"{args.data}/{csv_files[index]}" if args.multiple \
                 else args.data,

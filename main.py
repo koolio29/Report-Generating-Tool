@@ -4,6 +4,7 @@ import errno
 
 from report_generating_tool.reportgen import OverallReportGenerator
 from report_generating_tool.reportgen import LecturerReportGenerator
+from report_generating_tool.csvgen import LecturerFeedbackCsvGenerator
 
 ABS_SCRIPT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ""))
 
@@ -42,6 +43,11 @@ if __name__ == "__main__":
             + "If this flag is True, it would treat the '--data' flag" \
             + " as a path to a directory containing all exam data where" \
             + " each exam data file is named after the course unit.", 
+        action="store_true"
+    )
+    argparser.add_argument(
+        "-g", "--generate_data",
+        help="Generates a csv file containing statistics for lecturers use.",
         action="store_true"
     )
 
@@ -125,5 +131,14 @@ if __name__ == "__main__":
                 else args.data,
             save_path = save_path
         )
+
+        if args.generate_data:
+            csv_generator = LecturerFeedbackCsvGenerator(
+                csv_path =  f"{args.data}/{csv_files[index]}" 
+                            if args.multiple else args.data,
+                filename = f"{course_names[index]}-data.csv",
+                save_path = save_path
+            )
+            csv_generator.generate_csv()
     
     print("Reports have been created in 'outputs' folder.")

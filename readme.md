@@ -32,7 +32,7 @@ You can now pass in the `--help` flag to view the flags used by the script.
 ```
 (venv)$ python3 main.py --help
 
-usage: main.py [-h] [-c COURSE] [-d DATA] [-t TEMPLATE] [-m]
+usage: main.py [-h] [-c COURSE] [-d DATA] [-t TEMPLATE] [-m] [-g]
 
 Create exam feedback reports
 
@@ -42,14 +42,16 @@ optional arguments:
                         Course id. By Default it is COMP000000
   -d DATA, --data DATA  path or filename to the exam data. If '--multi-report'
                         is passed in, this becomes a path for the directory
-                        containing all exam data files.'
+                        containing all exam data files.
   -t TEMPLATE, --template TEMPLATE
                         Path for the report template to be used.
   -m, --multiple        Tells the script that it needs to generate multiple
                         reports. If this flag is True, it would treat the '--
                         data' flag as a path to a directory containing all
                         exam data where each exam data file is named after the
-                        course unit
+                        course unit.
+  -g, --generate_data   Generates a csv file containing statistics for
+                        lecturers use.
 ```
 
 ## Usage

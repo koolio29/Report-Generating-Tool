@@ -14,11 +14,19 @@ The table below shows the summary of the MCQs difficulty.
 
 {{ data.mcq_difficulty_table }}
 
+Below shows a graph showing the Difficulty of the questions.
+
+<img src="{{ data.difficulty_graph }}" width="550" height="375">
+
 ### Discrimination
 
 The table below shows a summary of discriminations for MCQ questions.
 
 {{ data.mcq_discrimination_table}}
+
+Below shows a graph showing the discriminations of the questions.
+
+<img src="{{ data.discrimination_graph }}" width="550" height="375">
 
 ### Questions to be reviewed
 

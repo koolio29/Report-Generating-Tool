@@ -4,6 +4,8 @@ from report_generating_tool.statsgen import OverallStats
 from report_generating_tool.statsgen import MCQStats
 from report_generating_tool.statsgen import EssayStats
 
+from report_generating_tool.graphgen import BarGraphGenerator
+
 from report_generating_tool.itemanalysis import agateplugin
 
 from report_generating_tool.reportgen.markdowngenerator import MarkDownGenerator
@@ -37,6 +39,23 @@ class LecturerReportGenerator:
         difficulties = simplified_table.difficulty()
         discriminations = simplified_table.discrimination()
 
+        difficulty_graph = BarGraphGenerator(save_path, "difficulty_graph")
+        difficulty_graph.generate_graph(
+            data_dict = difficulties,
+            title= "Difficulty Graph",
+            max_y = 100
+        )
+
+        # TODO: Maybe a line graph... the bar graph generated here looks weird
+        discrimination_graph = BarGraphGenerator(save_path, 
+                                                "discrimination_graph")
+        discrimination_graph.generate_graph(
+            data_dict = discriminations,
+            title = "Discrimination Graph",
+            min_y = -1,
+            max_y = 1
+        )
+
         data = {
             "unit_code" : course_id,
             "exam_stat_table" : get_md_stats_table(overall_stats, mcq_stats, 
@@ -48,7 +67,9 @@ class LecturerReportGenerator:
             ),
             "mcq_to_be_reviewed" : get_md_to_be_reviewed_table(
                 difficulties, discriminations
-            )
+            ),
+            "difficulty_graph" : difficulty_graph.graph_name,
+            "discrimination_graph" : discrimination_graph.graph_name
         }
 
         md_generator = MarkDownGenerator(

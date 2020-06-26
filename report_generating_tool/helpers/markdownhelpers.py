@@ -1,7 +1,25 @@
 from report_generating_tool.helpers import to_two_decimals
 
-def __get_difficulty_ranges(data):
-    # TODO: Docs
+def _get_difficulty_ranges(data):
+    """
+    Gets the number of questions which meets the set ranges of difficulty.
+
+    The ranges set are less than 30%, between 30% and 80% and greater than 80%.
+    (Should not be exposed outside of this module)
+
+    Parameters
+    ----------
+    data : dict
+        A dictionary containing the question number as key and the diffculty 
+        percentage as value
+
+    Returns
+    -------
+    dict
+        A dictionary containing the ranges and the amount of questions which
+        fits that range.
+
+    """
     range_dict = {"<30" : 0, "30-80" : 0, "≥80" : 0}
 
     for key in data.keys():
@@ -16,8 +34,25 @@ def __get_difficulty_ranges(data):
     
     return range_dict
 
-def __get_discrimination_ranges(data):
-    # TODO: Docs
+def _get_discrimination_ranges(data):
+    """
+    Gets the number of questions which meets the set ranges of discrimination.
+
+    The ranges set are less than 0.1, between 0.1 and 0.39, between 0.4 and 0.9
+    and exactly 1. (Should not be exposed outside of this module)
+
+    Parameters
+    ----------
+    data : dict
+        A dictionary containing the question number as key and its 
+        discrimination as value
+
+    Returns
+    -------
+    dict
+        A dictionary containing the ranges and the amount of questions which
+        fits that range.
+    """
     range_dict = {"<0.1" : 0, "0.1-0.39" : 0, "0.4-0.9" : 0, "1" : 0}
 
     for key in data.keys():
@@ -54,7 +89,6 @@ def get_md_stats_table(overall_stats, mcq_stats, essay_stats):
     str
         A string which contains a markdown table which includes exam statitics
     """
-
     return f"""
 |        | All                    | MCQs               | Essays               |
 |--------|------------------------|--------------------|----------------------|  
@@ -66,8 +100,15 @@ def get_md_stats_table(overall_stats, mcq_stats, essay_stats):
 """
 
 def get_md_difficulty_table(difficulty_dict):
-    # TODO: Docs
-    range_dict = __get_difficulty_ranges(difficulty_dict)
+    """
+    Generates a markdown table string which contains difficulty distributions
+
+    Returns
+    -------
+    str
+        A markdown table string
+    """
+    range_dict = _get_difficulty_ranges(difficulty_dict)
     return f"""
 | Number of Questions   | Difficulty Level | Percentage of Students Correct   |
 |---------------------- |------------------|----------------------------------|
@@ -77,8 +118,16 @@ def get_md_difficulty_table(difficulty_dict):
 """
 
 def get_md_discrimination_table(discrimination_dict):
-    # TODO: Docs
-    range_dict = __get_discrimination_ranges(discrimination_dict)
+    """
+    Generates a markdown table string which contains discrimination 
+    distributions
+
+    Returns
+    -------
+    str
+        A markdown table string
+    """
+    range_dict = _get_discrimination_ranges(discrimination_dict)
     return f"""
 | Number of Questions      | Discrimination Types                           |
 |--------------------------|------------------------------------------------|
@@ -89,6 +138,23 @@ def get_md_discrimination_table(discrimination_dict):
 """
 
 def get_md_to_be_reviewed_table(difficulty_dict, discrimination_dict):
+    """
+    Generates a markdown table which contains questions which should be 
+    reviewed
+
+    Parameters
+    ----------
+    difficulty_dict : dict
+        A dict containing difficulties of all questions
+
+    discrimination_dict : dict
+        A dict containing f discrimination of all questions
+
+    Returns
+    -------
+    str
+        A markdown table string
+    """
     questions = difficulty_dict.keys()
 
     flagged_questions = []

@@ -33,7 +33,6 @@ class ExamStats:
         agateTable : agate.Table
             agate.Table generated from "simplify_agate_table" function
         """
-
         self._max_marks = agateTable.aggregate(agate.Sum("max_marks")) \
             / agateTable.distinct("username").aggregate(agate.Count())
 

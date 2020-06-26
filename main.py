@@ -107,7 +107,6 @@ if __name__ == "__main__":
                                                     LECTURER_TEMPLATE)
 
     for index in range(0, len(course_names)):
-        # will need to append ".." to create output directory in the project root
         save_path = f"{os.getcwd()}/outputs/{course_names[index]}"
 
         try:
@@ -136,9 +135,9 @@ if __name__ == "__main__":
             csv_generator = LecturerFeedbackCsvGenerator(
                 csv_path =  f"{args.data}/{csv_files[index]}" 
                             if args.multiple else args.data,
-                filename = f"{course_names[index]}-data.csv",
+                filename = f"{course_names[index]}_data.csv",
                 save_path = save_path
             )
             csv_generator.generate_csv()
     
-    print("Reports have been created in 'outputs' folder.")
+    print("Files have been created in 'outputs' folder.")

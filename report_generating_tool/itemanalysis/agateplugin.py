@@ -2,9 +2,10 @@ import math
 
 import agate
 
-def __filter_questions(self, should_filter):
+def _filter_questions(self, should_filter):
     """
-    Filter Essay questions out of the table
+    Filter Essay questions out of the table.
+    (should not be exposed outside of module)
 
     Parameters
     ----------
@@ -38,7 +39,7 @@ def difficulty(self, filter_items=True, in_percentage=True):
     dict 
         A dictionary containing the item number and its difficulty as a value
     """
-    temp_table = __filter_questions(self, filter_items)
+    temp_table = _filter_questions(self, filter_items)
 
     temp_table = temp_table \
         .group_by("question_id") \
@@ -75,7 +76,7 @@ def discrimination(self, filter_items=True):
     dict 
         A dictionary containing the item number and its discrimination value
     """
-    working_table = __filter_questions(self, filter_items)
+    working_table = _filter_questions(self, filter_items)
 
     # Step 1: order students total marks in ascending order
     step_one_table = working_table \

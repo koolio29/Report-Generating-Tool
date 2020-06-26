@@ -24,7 +24,6 @@ class MCQStats(ExamStats):
         agateTable : agate.Table
             agate.Table generated from "simplify_agate_table" function
         """
-
         # filtering out the table just for mcq questions
         self._init_table = agateTable \
             .where(lambda row: row["question_type"] == "Auto")
@@ -44,7 +43,6 @@ class MCQStats(ExamStats):
         dict
             contains the question id and the average marks for that question
         """
-
         mcq_avgs_table = self._init_table \
             .group_by("question_id") \
             .aggregate([("Sum of marks", agate.Sum("marks"))]) \

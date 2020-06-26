@@ -11,15 +11,6 @@ class LecturerFeedbackCsvGenerator:
     This class is used to generate csv files which contains data, such as
     difiiculty, discrimination, etc.., of questions found in a given dataset.
 
-    Attributes
-    ----------
-    _working_table : agate.Table
-        An agate table which contains all the results for the students
-
-    _abs_path : str
-        The absolute path to save the csv file. This is basically 
-        "path_to_dir/file_name"
-
     Methods
     -------
     generate_csv()

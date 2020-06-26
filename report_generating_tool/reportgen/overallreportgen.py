@@ -13,12 +13,44 @@ from report_generating_tool.helpers import get_file_encoding
 from report_generating_tool.helpers import get_md_stats_table
 
 class OverallReportGenerator:
+    """
+    This class generates an overall feedback report for the exam containing 
+    basic statistics.
+
+    Methods
+    -------
+    generate_report(course_id, csv_path, save_path)
+        Generates the report to a given path using a given csv dataset
+    """
     
     def __init__(self, template_dir, template_name):
+        """
+        Parameters
+        ----------
+        template_dir : str
+            Path to the directory containing the template
+        
+        template_name : str
+            Name of the template to use
+        """
         self._template_dir = template_dir
         self._template_name = template_name
 
     def generate_report(self, course_id, csv_path, save_path):
+        """
+        Generates the lecturer specific report
+
+        Parameters
+        ----------
+        course_id : str
+            course id
+        
+        csv_path : str
+            Path to the csv dataset
+
+        save_path : str
+            Path to to save the generated report
+        """
         file_encoding = get_file_encoding(csv_path)
 
         exam_table = get_exam_agate_table(csv_path, 
@@ -71,4 +103,3 @@ class OverallReportGenerator:
         )
         
         md_generator.generate_file()
-

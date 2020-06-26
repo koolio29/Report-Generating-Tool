@@ -27,7 +27,6 @@ class BarGraphGenerator:
         save_format : str, optional
             format in which the graph needs to be saved as
         """
-
         self._save_path = path2save
         self._graph_name = f"{graph_name}.{save_format}"
         self._abs_path_to_graph = f"{path2save}/{graph_name}.{save_format}" 
@@ -52,7 +51,6 @@ class BarGraphGenerator:
         max_y : int, optional
             Maximum y value to be shown in the y axis. By default it is None
         """
-
         x_labels = tuple(data_dict.keys())
         data_points = []
 

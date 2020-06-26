@@ -21,7 +21,6 @@ class OverallStats(ExamStats):
         agateTable : agate.Table
             agate.Table generated from "simplify_agate_table" function
         """
-
         super().__init__(agateTable)
 
     def get_marks_distribution(self):
@@ -36,7 +35,6 @@ class OverallStats(ExamStats):
         dict
             dict containing the numbers of students in the defined mark ranges
         """
-
         return {
             "<30" : self._out_of_100_table.where(
                 lambda row: row["outof100"] < 30).aggregate(agate.Count()),

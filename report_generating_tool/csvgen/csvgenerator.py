@@ -7,16 +7,62 @@ from report_generating_tool.helpers import to_two_decimals
 from report_generating_tool.itemanalysis import agateplugin
 
 class LecturerFeedbackCsvGenerator:
+    """
+    This class is used to generate csv files which contains data, such as
+    difiiculty, discrimination, etc.., of questions found in a given dataset.
+
+    Attributes
+    ----------
+    _working_table : agate.Table
+        An agate table which contains all the results for the students
+
+    _abs_path : str
+        The absolute path to save the csv file. This is basically 
+        "path_to_dir/file_name"
+
+    Methods
+    -------
+    generate_csv()
+        Generates a csv file
+    """
 
     def __init__(self, csv_path, filename, save_path):
+        """
+        Parameters
+        ----------
+        csv_path : str
+            Path to the input csv file
+
+        filename : str
+            Name of the csv file which will be generated
+
+        save_path : str
+            Path to save the csv file
+        """
         self._working_table = simplify_agate_table(get_exam_agate_table(csv_path))
         self._abs_path = f"{save_path}/{filename}"
 
     def _get_question_numbers(self):
-        # returns a tuple
+        """
+        Returns all the question numbers in an exam.
+
+        Returns
+        -------
+        Tuple
+            A tuple containing all the question number of the agate.Table
+
+        """
         return self._working_table.group_by("question_id").keys()
 
     def generate_csv(self):
+        """
+        Generates a csv file for the lecturer
+
+        The csv file generated contains the following header:
+        question number,difficulty,discrimination,standard deviation,standard error
+
+        The statistics are calculated using the agate plugin
+        """
         difficulties = self._working_table.difficulty()
         discriminations = self._working_table.discrimination()
         stdevs = self._working_table.standardDeviation()

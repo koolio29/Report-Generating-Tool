@@ -78,6 +78,3 @@ class LecturerFeedbackCsvGenerator:
                 ]
 
                 file_writer.writerow(row)
-
-
-

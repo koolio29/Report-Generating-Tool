@@ -45,7 +45,6 @@ def get_max_value_from_dict(mydict):
     Dictionary key value
         The maximum dictionary key value
     """
-
     return mydict[max(mydict, key=mydict.get)]
 
 def to_two_decimals(value):
@@ -62,5 +61,4 @@ def to_two_decimals(value):
     float
         A floating number with 2 decimal points
     """
-
     return round(float(value), 2)

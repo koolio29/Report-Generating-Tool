@@ -27,7 +27,6 @@ class EssayStats(ExamStats):
         agateTable : agate.Table
             agate.Table generated from "simplify_agate_table" function
         """
-        
         # filtering out the table just for essay questions
         self._init_table = agateTable \
             .where(lambda row: row["question_type"] == "Manual")
@@ -47,7 +46,6 @@ class EssayStats(ExamStats):
         dict
             contains the question id and the average marks for that question
         """
-
         essay_avgs_table = self._init_table \
             .group_by("question_id") \
             .aggregate([("Sum of marks", agate.Sum("marks"))]) \
@@ -76,7 +74,6 @@ class EssayStats(ExamStats):
         list
             A list containing a dict per essay question with basic stats
         """
-
         essay_stats = self._init_table \
             .select(["question_id", "max_marks", "marks"]) \
             .group_by("question_id") \

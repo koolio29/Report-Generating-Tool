@@ -16,7 +16,6 @@ def simplify_agate_table(exam_table):
     agate.Table
         An agate.Table which contains the exam results in a simplified format
     """
-
     column_names = [
         "username", 
         "last_name", 
@@ -72,7 +71,6 @@ def get_exam_agate_table(csv_name, file_encoding="utf-8"):
     agate.Table
         An agate Table containing all the rows from the csv file
     """
-
     # Overriding the default types guessed by agate
     type_tester = agate.TypeTester(force={
         "Username" : agate.Text(),

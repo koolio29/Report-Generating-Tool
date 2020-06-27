@@ -1,18 +1,26 @@
 # Report Generating Tool
 
-This Python script allows lecturers to generate exam feedback reports. In the current version of the script, lecturers can generate single or multiple feedback reports (in markdown) using csv files downloaded from BlackBoard.
+The tool allows to create reports using a csv file which contains the results of the student. In the current version of the tool, it can generate two types of report. They are overall feedback reports and lecturer specific reports.
 
-The report generated contains:
+The overall feedback report contains:
 * Basic statistics of the overall exam.
 * Basic statistics of the overall auto/manually marked questions.
-* Graphs to visualize the averages individual questions.
+* Graphs to visualize the averages of individual questions.
 
-*__Note:__ For the latest features, pull `develop` branch.*
+The lecturer specific report contains:
+* Common item analysis statistics such as difficulty and discrimination of questions.
+* Graphs to visulaize the difficulty and discriminations of questions
+* Details of the questions which are flagged for review.
+
+In addition, the tool can generate csv files which contains the item analysis of the questions.
+
+*__Note:__ For the latest features , pull `develop` branch.*
 
 ## Getting Started
-The following instructions will help you to get the script up and running on your local machine.
+The following instructions will help you to get the tool up and running on your local machine.
 
-To run the script, Python 3.6 or greater is required. After cloning this repository, you will need to create a virtual environment. To create a virtual enviroment type in the following command (after opening the terminal in the directory where the repository located):
+To run the tool, Python 3.6 or greater is required. After cloning this repository, you will need to create a virtual environment. To create a virtual enviroment type in the following command (after opening the terminal in the directory where the repository located):
+
 ```
 $ python3 -m venv venv
 ```
@@ -22,7 +30,7 @@ Now you can activate the virtual environment by typing the following command:
 $ source venv/bin/activate
 ```
 
-Now install the dependencies for the script by typing:
+Now install the dependencies for the tool by typing:
 ```
 (venv)$ pip3 install -r requirements.txt
 ```
@@ -32,7 +40,7 @@ You can now pass in the `--help` flag to view the flags used by the script.
 ```
 (venv)$ python3 main.py --help
 
-usage: main.py [-h] [-c COURSE] [-d DATA] [-t TEMPLATE] [-m]
+usage: main.py [-h] [-c COURSE] [-d DATA] [-t TEMPLATE] [-m] [-g]
 
 Create exam feedback reports
 
@@ -42,14 +50,16 @@ optional arguments:
                         Course id. By Default it is COMP000000
   -d DATA, --data DATA  path or filename to the exam data. If '--multi-report'
                         is passed in, this becomes a path for the directory
-                        containing all exam data files.'
+                        containing all exam data files.
   -t TEMPLATE, --template TEMPLATE
                         Path for the report template to be used.
   -m, --multiple        Tells the script that it needs to generate multiple
                         reports. If this flag is True, it would treat the '--
                         data' flag as a path to a directory containing all
                         exam data where each exam data file is named after the
-                        course unit
+                        course unit.
+  -g, --generate_data   Generates a csv file containing statistics for
+                        lecturers use.
 ```
 
 ## Usage
@@ -64,9 +74,12 @@ Example:
 (venv)$ python3 main.py --data data/full_exam.csv --course COMP111111
 ```
 
-When you run this in the terminal, the script will create a new directory called 'outputs' and create new folders within this directory, named after the course ID, to save the generated report along with the graphs. The 'output' can be found in the same directory as the `main.py`.
+When you run this in the terminal, the script will create a new directory called 'outputs' and create new folders within this directory, named after the course ID, to save the generated reports along with the graphs. The 'output' can be found in the same directory as the `main.py`.
+
+Two reports are saved to the newly created folders.
 
 ### Multiple Report Generation
+
 To generate multiple reports, you will need to atleast pass the following flags:
 * `--multiple` :- This flag tells the script to treat the `--data` flag as a path to a directory containing all the exam data in csv format where each csv file is named after the course id.
 * `--data` :- This is the path to the directory containing all the csv files.
@@ -75,12 +88,24 @@ Example:
 ```
 (venv)$ python3 main.py --data data --multiple
 ```
-When you run this in the terminal, the script will create a new directory for each of the csv file found in the path passed in as `--data` and will be named after their respective csv file name. The files generated can be found in the 'outputs' directory.
+When you run this in the terminal, the script will create a new directory for each of the csv file found in the path passed in as `--data`. and the reports generated will be named after their respective csv file name. The files generated can be found in the 'outputs' directory.
 
-### Using a Different Template
-To use a different template for the report, you will need to use `--template` flag to pass in the path of the template you want to use. It should be noted that the template should follow the jinja2 syntax and use the required placeholders regardless of whether it is a markdown or a latex file.
+### Generating csv files
 
-By default, the script looks for the template found in 'templates/default_template.md'
+The tool can generate the csv file containing the item analysis of the question by passing the `--generate_data` flag.
+
+Example:
+```
+(venv)$ python3 main.py --course COMP612535 --data path/to/csv/file.csv --generate_data
+```
+
+When you run the command above, the csv file generated will be saved into the same directory as the rest of the files generated for a given course.
+
+### Using a different template for overall feedback report
+
+You can use a different template for the overall feedback report by passing the path of the new template to the `--template` flag. It should be noted that the template should follow the jinja2 syntax and use the required place holders.
+
+By default, the tool looks for the template found in 'templates/default_template.md'
 
 Example:
 ```
@@ -89,8 +114,9 @@ Example:
 
 When you run this in the terminal, it will use the new template when creating the report.
 
-### Template Placeholders
-The table below shows the placeholders to use when creating your own templates for the report.
+#### Template placeholders
+
+The table below shows the placeholders to use when creating your own templates for the overall feedback report.
 
 | Placeholder             | Description                                                                                                                         |
 |-------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
@@ -121,9 +147,13 @@ test_max_essay_mark (test_statsgen.test_essaystats.TestEssayStats) ... ok
 test_get_marks_distribution (test_statsgen.test_overallstats.TestOverallStats) ... ok
 test_get_mcq_avgs (test_statsgen.test_mcqstats.TestMCQStats) ... ok
 test_max_mcq_marks (test_statsgen.test_mcqstats.TestMCQStats) ... ok
+test_difficulty (test_itemanalysis.test_agateplugin.TestAgatePlugin) ... ok
+test_discrimination (test_itemanalysis.test_agateplugin.TestAgatePlugin) ... ok
+test_standardDeviation (test_itemanalysis.test_agateplugin.TestAgatePlugin) ... ok
+test_standardError (test_itemanalysis.test_agateplugin.TestAgatePlugin) ... ok
 
 ----------------------------------------------------------------------
-Ran 11 tests in 0.029s
+Ran 15 tests in 0.047s
 
 OK
 ```

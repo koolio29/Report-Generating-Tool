@@ -29,13 +29,12 @@ class MarkDownGenerator:
         data : dict
             The data which needs to be rendered to the markdown template
         """
-
         self._template_dst = template_dst
         self._template_name = template_name
         self._data = data
         self._abs_path_to_md = f"{save_path}/{md_name}"
 
-    def __write_file(self, contents):
+    def _write_file(self, contents):
         """
         Writes the markdown file to the filesystem
 
@@ -49,7 +48,6 @@ class MarkDownGenerator:
         Boolean
             True if file was saved else False
         """
-
         try:
             file2write = open(self._abs_path_to_md, "w")
             file2write.write(contents)
@@ -60,7 +58,7 @@ class MarkDownGenerator:
         
         return True
             
-    def __read_template(self):
+    def _read_template(self):
         """
         Reads in the Jinja2 template and adds in the data required by it
 
@@ -70,7 +68,6 @@ class MarkDownGenerator:
             A string containing the final markdown string with all the data
             populated
         """
-
         fileloader = jinja2.FileSystemLoader(f"{self._template_dst}")
         environment = jinja2.Environment(loader=fileloader)
 
@@ -88,5 +85,4 @@ class MarkDownGenerator:
         Boolean
             Returns True if the file was saved to file system else False
         """
-
-        return self.__write_file(self.__read_template())
+        return self._write_file(self._read_template())

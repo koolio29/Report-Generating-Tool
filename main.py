@@ -3,6 +3,8 @@ import os
 import errno
 
 from report_generating_tool.reportgen import OverallReportGenerator
+from report_generating_tool.reportgen import LecturerReportGenerator
+from report_generating_tool.csvgen import LecturerFeedbackCsvGenerator
 
 ABS_SCRIPT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ""))
 
@@ -10,6 +12,8 @@ ABS_SCRIPT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ""))
 # TODO: Probably need to add a flag to allow to specify a save path
 DEFAULT_DATA_PATH = ABS_SCRIPT_PATH + "/data/full_exam.csv"
 DEFAULT_TEMPLATE_PATH = ABS_SCRIPT_PATH + "/templates"
+
+LECTURER_TEMPLATE = "lecturer_template.md"
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser(
@@ -39,6 +43,11 @@ if __name__ == "__main__":
             + "If this flag is True, it would treat the '--data' flag" \
             + " as a path to a directory containing all exam data where" \
             + " each exam data file is named after the course unit.", 
+        action="store_true"
+    )
+    argparser.add_argument(
+        "-g", "--generate_data",
+        help="Generates a csv file containing statistics for lecturers use.",
         action="store_true"
     )
 
@@ -94,9 +103,10 @@ if __name__ == "__main__":
         os.mkdir("outputs")
 
     report_generator = OverallReportGenerator(template_dir, template_name)
+    lecturer_report_gen = LecturerReportGenerator(template_dir, 
+                                                    LECTURER_TEMPLATE)
 
     for index in range(0, len(course_names)):
-        # will need to append ".." to create output directory in the project root
         save_path = f"{os.getcwd()}/outputs/{course_names[index]}"
 
         try:
@@ -113,5 +123,21 @@ if __name__ == "__main__":
                 else args.data,
             save_path = save_path
         )
+
+        lecturer_report_gen.generate_report(
+            course_id = course_names[index],
+            csv_path = f"{args.data}/{csv_files[index]}" if args.multiple \
+                else args.data,
+            save_path = save_path
+        )
+
+        if args.generate_data:
+            csv_generator = LecturerFeedbackCsvGenerator(
+                csv_path =  f"{args.data}/{csv_files[index]}" 
+                            if args.multiple else args.data,
+                filename = f"{course_names[index]}_data.csv",
+                save_path = save_path
+            )
+            csv_generator.generate_csv()
     
-    print("Reports have been created in 'outputs' folder.")
+    print("Files have been created in 'outputs' folder.")

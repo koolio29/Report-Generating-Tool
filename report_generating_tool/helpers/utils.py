@@ -64,6 +64,7 @@ def to_two_decimals(value):
     # FIXME:
     # Not a very good idea to use floats here... since it does not all numbers 
     # are represented exactly... however leaving like this for now since a
-    # changing it to decimal.Decimal breaks over half of the unit tests
+    # changing it to decimal.Decimal breaks over half of the unit tests. Even 
+    # left as it is, it does not cause a huge problem to the tool itself
     # https://stackoverflow.com/questions/455612/limiting-floats-to-two-decimal-points
     return round(float(value), 2) 

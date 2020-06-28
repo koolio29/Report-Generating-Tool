@@ -7,6 +7,8 @@ from test_statsgen import test_mcqstats
 
 from test_itemanalysis import test_agateplugin
 
+from test_helpers import test_utils
+
 if __name__ == "__main__":
     test_loader = TestLoader()
     test_suite = TestSuite()
@@ -19,6 +21,9 @@ if __name__ == "__main__":
 
     # Item analysis plugin
     test_suite.addTests(test_loader.loadTestsFromModule(test_agateplugin))
+
+    # Helper functions
+    test_suite.addTests(test_loader.loadTestsFromModule(test_utils))
 
     test_runner = TextTestRunner(verbosity=3)
     test_runner.run(test_suite)

@@ -91,17 +91,21 @@ def get_md_stats_table(overall_stats, mcq_stats, essay_stats):
     """
     return f"""
 |        | All                    | MCQs               | Essays               |
-|--------|------------------------|--------------------|----------------------|  
-| Mean   | {overall_stats.mean}   | {mcq_stats.mean}   | {essay_stats.mean}   |  
-| Median | {overall_stats.median} | {mcq_stats.median} | {essay_stats.median} |  
-| Stdev  | {overall_stats.stdev}  | {mcq_stats.stdev}  | {essay_stats.stdev}  |  
-| Min    | {overall_stats.min}    | {mcq_stats.min}    | {essay_stats.min}    |  
-| Max    | {overall_stats.max}    | {mcq_stats.max}    | {essay_stats.max}    |
-"""
+|--------|------------------------|--------------------|----------------------|
+| Mean   | {overall_stats.mean}   | {mcq_stats.mean}   | {essay_stats.mean}   |
+| Median | {overall_stats.median} | {mcq_stats.median} | {essay_stats.median} |
+| Stdev  | {overall_stats.stdev}  | {mcq_stats.stdev}  | {essay_stats.stdev}  |
+| Min    | {overall_stats.min}    | {mcq_stats.min}    | {essay_stats.min}    |
+| Max    | {overall_stats.max}    | {mcq_stats.max}    | {essay_stats.max}    |"""
 
 def get_md_difficulty_table(difficulty_dict):
     """
     Generates a markdown table string which contains difficulty distributions
+
+    Parameters
+    ----------
+    difficulty_dict : dict
+        A dict containing difficulties of all questions
 
     Returns
     -------
@@ -113,14 +117,18 @@ def get_md_difficulty_table(difficulty_dict):
 | Number of Questions   | Difficulty Level | Percentage of Students Correct   |
 |---------------------- |------------------|----------------------------------|
 | {range_dict["<30"]}   | Hard             | Less than 30%                    |
-| {range_dict["30-80"]}| Medium           | Between 30% to 80%               |
-| {range_dict["≥80"]}   | Easy             | Greater than 80%                 |
-"""
+| {range_dict["30-80"]} | Medium           | Between 30% to 80%               |
+| {range_dict["≥80"]}   | Easy             | Greater than 80%                 |"""
 
 def get_md_discrimination_table(discrimination_dict):
     """
     Generates a markdown table string which contains discrimination 
     distributions
+
+    Parameters
+    ----------
+    discrimination_dict : dict
+        A dict containing f discrimination of all questions
 
     Returns
     -------
@@ -134,8 +142,7 @@ def get_md_discrimination_table(discrimination_dict):
 | {range_dict["<0.1"]}     | Negative Discrimination (between -1.0 an 0.0)  |
 | {range_dict["0.1-0.39"]} | Bottom threshold (between 0.10 and 0.39)       |
 | {range_dict["0.4-0.9"]}  | Great discriminators (between 0.40 and 0.90)   |
-| {range_dict["1"]}        | Perfectly discriminating (equal to 1.0)        |
-"""
+| {range_dict["1"]}        | Perfectly discriminating (equal to 1.0)        |"""
 
 def get_md_to_be_reviewed_table(difficulty_dict, discrimination_dict):
     """

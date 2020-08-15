@@ -2,6 +2,9 @@ import argparse
 import os
 import errno
 
+from gooey import Gooey
+from gooey import GooeyParser
+
 from report_generating_tool.reportgen import OverallReportGenerator
 from report_generating_tool.reportgen import LecturerReportGenerator
 from report_generating_tool.csvgen import LecturerFeedbackCsvGenerator
@@ -15,34 +18,43 @@ DEFAULT_TEMPLATE_PATH = ABS_SCRIPT_PATH + "/templates"
 
 LECTURER_TEMPLATE = "lecturer_template.md"
 
-if __name__ == "__main__":
-    argparser = argparse.ArgumentParser(
+@Gooey(
+    program_name='Exam Feedback Generating Tool', 
+    default_size=(625, 550)
+)
+def main():
+    argparser = GooeyParser(
         description="Create exam feedback reports"
     )
 
     argparser.add_argument(
-        "-c", "--course", 
-        help="Course id. By Default it is COMP000000", 
+        "-c", "--CourseId", 
+        help="Course Id which will be used for the files created. Only when "
+            + "using a single dataset", 
         default="COMP000000"
     )
     argparser.add_argument(
-        "-d", "--data", 
-        help="path or filename to the exam data. If '--multi-report' is " \
-            + "passed in, this becomes a path for the directory " \
-            + " containing all exam data files.", 
-        default=DEFAULT_DATA_PATH
+        "-d", "--DatasetFile", 
+        help="Select the CSV file from which the report will be generated."
+        + " This Will not be used when generating multiple feedback reports", 
+        widget='FileChooser'
     )
     argparser.add_argument(
         "-t", "--template", 
-        help="Path for the report template to be used.", 
-        default=DEFAULT_TEMPLATE_PATH
+        help="Select the template to be used.", 
+        default=DEFAULT_TEMPLATE_PATH,
+        widget='FileChooser'
+    )
+    argparser.add_argument(
+        "-f", "--DatasetFolder", 
+        help="Selects a folder containing multiple csv dataset files. Only "
+            + "used when generating multiple reports", 
+        widget="DirChooser"
     )
     argparser.add_argument(
         "-m", "--multiple", 
-        help="Tells the script that it needs to generate multiple reports. " \
-            + "If this flag is True, it would treat the '--data' flag" \
-            + " as a path to a directory containing all exam data where" \
-            + " each exam data file is named after the course unit.", 
+        help="Uses the directory specified in DatasetFolder to get a set of"
+            + " csv data files to create multiple reports", 
         action="store_true"
     )
     argparser.add_argument(
@@ -52,6 +64,23 @@ if __name__ == "__main__":
     )
 
     args = argparser.parse_args()
+
+    if args.multiple:
+        if args.DatasetFolder is None:
+            print("You are trying to generate multiple feedback reports"
+            + " but you have not passed in a folder containing multiple csv"
+            + " files containing exam data")
+            exit(1)
+
+    if args.DatasetFile is None:
+        print("You were trying to genereate a feedback report but you have not" 
+        + "passed in a csv file containing the exam data")
+        exit(1)
+
+    if args.template is None:
+        print("You have not selected a template to use for generating the"
+        + " overall feedback report")
+        exit(1) 
 
     # Checking if we need the default values
     template_dir = args.template if args.template == DEFAULT_TEMPLATE_PATH \
@@ -71,32 +100,34 @@ if __name__ == "__main__":
     csv_files = None
     course_names = None
 
-    if not os.path.exists(args.data):
-        print(f"'{args.data}' does not exist!.")
+    csv_location = args.DatasetFolder if args.multiple else args.DatasetFile
+
+    if not os.path.exists(csv_location):
+        print(f"'{csv_location}' does not exist!.")
         exit(1)
     elif args.multiple:
         # -d should not be a file
-        if os.path.isfile(args.data):
-            print(f"'{args.data}' is a path to a file. " \
+        if os.path.isfile(csv_location):
+            print(f"'{csv_location}' is a path to a file. " \
                 + "Please pass in a path to a directory containing csv files" \
                 + " when using '--multiple' flag.")
             exit(1)
 
-        csv_files = [f for f in os.listdir(args.data) if f.endswith(".csv")]
+        csv_files = [f for f in os.listdir(csv_location) if f.endswith(".csv")]
         course_names = [name.split(".")[0] for name in csv_files]
 
         # Checking if the directory contained any csv files
         if len(csv_files) == 0:
             print("No csv files in the directory!.")
             exit(1)
-    elif os.path.isdir(args.data): 
+    elif os.path.isdir(csv_location): 
         # -d should not be a folder since -m is false
-        print(f"'{args.data}' is a path to directory." \
+        print(f"'{csv_location}' is a path to directory." \
             + " Please use the '--multiple' flag if you want to " \
             + "generate multiple reports.")
         exit(1)
     else:
-        course_names = [args.course]
+        course_names = [args.CourseId]
 
     # All generated files should be saved in outputs
     if not os.path.isdir("outputs"):
@@ -119,25 +150,28 @@ if __name__ == "__main__":
 
         report_generator.generate_report(
             course_id = course_names[index],
-            csv_path = f"{args.data}/{csv_files[index]}" if args.multiple \
-                else args.data,
+            csv_path = f"{csv_location}/{csv_files[index]}" if args.multiple \
+                else csv_location,
             save_path = save_path
         )
 
         lecturer_report_gen.generate_report(
             course_id = course_names[index],
-            csv_path = f"{args.data}/{csv_files[index]}" if args.multiple \
-                else args.data,
+            csv_path = f"{csv_location}/{csv_files[index]}" if args.multiple \
+                else csv_location,
             save_path = save_path
         )
 
         if args.generate_data:
             csv_generator = LecturerFeedbackCsvGenerator(
-                csv_path =  f"{args.data}/{csv_files[index]}" 
-                            if args.multiple else args.data,
+                csv_path =  f"{csv_location}/{csv_files[index]}" 
+                            if args.multiple else csv_location,
                 filename = f"{course_names[index]}_data.csv",
                 save_path = save_path
             )
             csv_generator.generate_csv()
     
     print("Files have been created in 'outputs' folder.")
+
+if __name__ == "__main__":
+    main()

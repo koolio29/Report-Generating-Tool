@@ -1,0 +1,41 @@
+Username,Last Name,First Name,Question ID,Question,Possible Points,Answer,Auto Score,Manual Score
+mbasnji9,Smith,Oliver,Question ID 1,What is 2 + 2?,1,2,0
+mbasnji9,Smith,Oliver,Question ID 2,What is 2 + 3?,1,4,0,
+mbasnji9,Smith,Oliver,Question ID 3,What is 2 + 4?,1,6,1,
+mbasnji9,Smith,Oliver,Question ID 4,What is 2 + 5?,1,7,1,
+mbasnji9,Smith,Oliver,Question ID 5,What is refactoring?,5,very bad answer,,0.5
+mbasfep1,Jones,Harry,Question ID 1,What is 2 + 2?,1,4,1,
+mbasfep1,Jones,Harry,Question ID 2,What is 2 + 3?,1,5,1,
+mbasfep1,Jones,Harry,Question ID 3,What is 2 + 4?,1,6,1,
+mbasfep1,Jones,Harry,Question ID 4,What is 2 + 5?,1,7,1,
+mbasfep1,Jones,Harry,Question ID 5,What is refactoring?,5,okayish answer,,2.5
+mbasafw4,Williams,George,Question ID 1,What is 2 + 2?,1,3,0
+mbasafw4,Williams,George,Question ID 2,What is 2 + 3?,1,4,0,
+mbasafw4,Williams,George,Question ID 3,What is 2 + 4?,1,6,1,
+mbasafw4,Williams,George,Question ID 4,What is 2 + 5?,1,4,0,
+mbasafw4,Williams,George,Question ID 5,What is refactoring?,5,okay,,3
+mbasrrd1,Taylor,Noah,Question ID 1,What is 2 + 2?,1,4,1,
+mbasrrd1,Taylor,Noah,Question ID 2,What is 2 + 3?,1,5,1,
+mbasrrd1,Taylor,Noah,Question ID 3,What is 2 + 4?,1,6,1,
+mbasrrd1,Taylor,Noah,Question ID 4,What is 2 + 5?,1,7,1,
+mbasrrd1,Taylor,Noah,Question ID 5,What is refactoring?,5,goodish answer,,3.5
+mbasfoq6,Davies,Jack,Question ID 1,What is 2 + 2?,1,2,0
+mbasfoq6,Davies,Jack,Question ID 2,What is 2 + 3?,1,5,1,
+mbasfoq6,Davies,Jack,Question ID 3,What is 2 + 4?,1,6,1,
+mbasfoq6,Davies,Jack,Question ID 4,What is 2 + 5?,1,7,1,
+mbasfoq6,Davies,Jack,Question ID 5,What is refactoring?,5,good answer,,4
+mbasogw4,Evans,Jacob,Question ID 1,What is 2 + 2?,1,4,1
+mbasogw4,Evans,Jacob,Question ID 2,What is 2 + 3?,1,5,1,
+mbasogw4,Evans,Jacob,Question ID 3,What is 2 + 4?,1,8,0,
+mbasogw4,Evans,Jacob,Question ID 4,What is 2 + 5?,1,4,0,
+mbasogw4,Evans,Jacob,Question ID 5,What is refactoring?,5,best answer,,5
+mbastve9,Thomas,Leo,Question ID 1,What is 2 + 2?,1,4,1
+mbastve9,Thomas,Leo,Question ID 2,What is 2 + 3?,1,11,0,
+mbastve9,Thomas,Leo,Question ID 3,What is 2 + 4?,1,6,1,
+mbastve9,Thomas,Leo,Question ID 4,What is 2 + 5?,1,7,1,
+mbastve9,Thomas,Leo,Question ID 5,What is refactoring?,5,not bad but not good,,2.5
+mbaslbr6,Johnson,Oscar,Question ID 1,What is 2 + 2?,1,8,0
+mbaslbr6,Johnson,Oscar,Question ID 2,What is 2 + 3?,1,5,1,
+mbaslbr6,Johnson,Oscar,Question ID 3,What is 2 + 4?,1,7,0,
+mbaslbr6,Johnson,Oscar,Question ID 4,What is 2 + 5?,1,7,1,
+mbaslbr6,Johnson,Oscar,Question ID 5,What is refactoring?,5,between good and great,,4.5

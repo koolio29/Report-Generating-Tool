@@ -14,7 +14,7 @@ The lecturer specific report contains:
 
 In addition, the tool can generate csv files which contains the item analysis of the questions.
 
-*__Note:__ For the latest features , pull `develop` branch.*
+*__Note:__ For the latest features , pull `develop_gui` branch.*
 
 ## Getting Started
 The following instructions will help you to get the tool up and running on your local machine.
